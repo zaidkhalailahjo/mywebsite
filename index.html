@@ -150,6 +150,16 @@
                 <button onclick="window.resetAuthUI()" class="text-sm text-gray-500 underline mt-2">تغيير رقم الهاتف</button>
             </div>
 
+            <!-- Profile Name Step (New) -->
+            <div id="auth-step-3" class="space-y-4 hidden">
+                <h3 class="text-xl font-bold text-[#002d74]">خطوة أخيرة!</h3>
+                <p class="text-sm text-gray-500">يرجى إدخال اسمك الكريم لإكمال التسجيل</p>
+                <input type="text" id="new-user-name" placeholder="الاسم الكامل" class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-[#00839b] text-center font-bold text-lg">
+                <button onclick="window.saveUserName()" class="w-full bg-[#00839b] text-white py-3 rounded-xl font-bold text-lg shadow-lg hover:bg-[#005f73] transition-all">
+                    حفظ ومتابعة
+                </button>
+            </div>
+
             <!-- Profile Info (If logged in) -->
             <div id="auth-profile" class="space-y-4 hidden">
                 <div class="w-20 h-20 bg-[#002d74] text-white rounded-full flex items-center justify-center text-3xl font-bold mx-auto shadow-inner border-4 border-white">👤</div>
@@ -430,9 +440,9 @@
                 appState.db = getFirestore(app);
                 appState.auth = getAuth(app);
                 
-                // Initialize Recaptcha for Phone Auth
+                // Initialize Recaptcha for Phone Auth (تم التغيير إلى normal لضمان وصول الرسائل)
                 window.recaptchaVerifier = new RecaptchaVerifier(appState.auth, 'recaptcha-container', {
-                    'size': 'invisible',
+                    'size': 'normal',
                     'callback': (response) => {}
                 });
 
@@ -456,12 +466,26 @@
 
         const listenToProfile = () => {
             onSnapshot(doc(appState.db, PATH_PROFILES, appState.user.uid), (snap) => {
-                if(snap.exists()) appState.profile = snap.data();
-                else {
-                    appState.profile = { phone: appState.user.phoneNumber, balance: 0 };
-                    setDoc(doc(appState.db, PATH_PROFILES, appState.user.uid), appState.profile);
+                if(snap.exists() && snap.data().name) {
+                    appState.profile = snap.data();
+                    updateAuthUI();
+                    if(!document.getElementById('auth-step-3').classList.contains('hidden')) {
+                        toggleModal('auth', false);
+                    }
+                } else {
+                    // Profile doesn't exist or name is missing
+                    appState.profile = snap.exists() ? snap.data() : { phone: appState.user.phoneNumber, balance: 0 };
+                    
+                    // Hide other steps and show Step 3 (Name input)
+                    document.getElementById('auth-step-1').classList.add('hidden');
+                    document.getElementById('auth-step-2').classList.add('hidden');
+                    document.getElementById('auth-profile').classList.add('hidden');
+                    document.getElementById('auth-step-3').classList.remove('hidden');
+                    
+                    // Keep modal open
+                    document.getElementById('auth-modal').classList.remove('hidden');
+                    document.getElementById('auth-modal').classList.add('active');
                 }
-                updateAuthUI();
             });
         };
 
@@ -526,14 +550,32 @@
             btn.disabled = true; btn.textContent = 'جاري التأكد...';
             
             window.confirmationResult.confirm(code).then((result) => {
-                toggleModal('auth', false);
-                showToast('تم تسجيل الدخول بنجاح!', 'success');
+                showToast('تم التحقق بنجاح!', 'success');
                 btn.disabled = false; btn.textContent = 'تأكيد الدخول';
-                resetAuthUI();
+                // سيتم معالجة إغلاق النافذة أو طلب الاسم تلقائياً بواسطة listenToProfile
             }).catch((err) => {
                 showToast('الرمز خاطئ، حاول مجدداً', 'error');
                 btn.disabled = false; btn.textContent = 'تأكيد الدخول';
             });
+        };
+
+        window.saveUserName = async () => {
+            const name = document.getElementById('new-user-name').value.trim();
+            if(name.length < 3) return showToast("يرجى إدخال اسم صحيح", "error");
+
+            try {
+                const profileData = {
+                    phone: appState.user.phoneNumber,
+                    name: name,
+                    balance: appState.profile?.balance || 0
+                };
+                await setDoc(doc(appState.db, PATH_PROFILES, appState.user.uid), profileData, { merge: true });
+                showToast("تم حفظ البيانات بنجاح", "success");
+                toggleModal('auth', false);
+            } catch(e) {
+                console.error(e);
+                showToast("حدث خطأ أثناء الحفظ", "error");
+            }
         };
 
         window.resetAuthUI = () => {
@@ -552,12 +594,12 @@
 
         const updateAuthUI = () => {
             const loggedIn = !!appState.user;
-            document.getElementById('auth-btn-text').textContent = loggedIn ? 'حسابي' : 'دخول';
+            document.getElementById('auth-btn-text').textContent = loggedIn && appState.profile?.name ? appState.profile.name.split(' ')[0] : (loggedIn ? 'حسابي' : 'دخول');
             document.getElementById('orders-btn').classList.toggle('hidden', !loggedIn);
             
             // Header Wallet
             const walletDisp = document.getElementById('wallet-display');
-            if(loggedIn && appState.profile) {
+            if(loggedIn && appState.profile && appState.profile.name) {
                 walletDisp.classList.remove('hidden');
                 document.getElementById('header-balance').textContent = (appState.profile.balance || 0).toFixed(2);
             } else {
@@ -567,11 +609,12 @@
             // Modal Profile
             document.getElementById('auth-step-1').classList.toggle('hidden', loggedIn);
             document.getElementById('auth-step-2').classList.add('hidden');
+            document.getElementById('auth-step-3').classList.add('hidden');
             document.getElementById('auth-profile').classList.toggle('hidden', !loggedIn);
             
-            if(loggedIn) {
-                document.getElementById('profile-phone').textContent = appState.user.phoneNumber;
-                document.getElementById('profile-wallet').textContent = (appState.profile?.balance || 0).toFixed(2);
+            if(loggedIn && appState.profile?.name) {
+                document.getElementById('profile-phone').textContent = appState.profile.name;
+                document.getElementById('profile-wallet').textContent = (appState.profile.balance || 0).toFixed(2);
             }
         };
 
@@ -811,6 +854,12 @@
         window.openCheckout = () => {
             toggleModal('cart', false);
             document.getElementById('checkout-final-total').textContent = calculateTotals().total.toFixed(2) + ' د.أ';
+            
+            // Pre-fill name if available
+            if(appState.profile && appState.profile.name) {
+                document.getElementById('customer-name').value = appState.profile.name;
+            }
+            
             appState.exactLoc = null; appState.locBypassed = false; appState.locationFailCount = 0;
             
             const btn = document.getElementById('get-location-btn');
