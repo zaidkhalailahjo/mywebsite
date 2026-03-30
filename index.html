@@ -68,22 +68,22 @@
             </div>
 
             <div class="flex items-center gap-2 md:gap-3">
-                <button id="auth-btn" onclick="toggleModal('auth', true)" class="bg-white/10 hover:bg-white/20 px-3 py-2 rounded-full text-xs md:text-sm font-bold items-center gap-1 transition-colors border border-white/20 flex">
+                <button id="auth-btn" onclick="window.toggleModal('auth', true)" class="bg-white/10 hover:bg-white/20 px-3 py-2 rounded-full text-xs md:text-sm font-bold items-center gap-1 transition-colors border border-white/20 flex">
                     <i data-lucide="user" class="w-4 h-4"></i>
                     <span id="auth-btn-text">دخول</span>
                 </button>
                 
-                <button id="orders-btn" onclick="toggleModal('orders', true)" class="hidden bg-[#00839b] hover:bg-[#005f73] px-3 py-2 rounded-full text-xs md:text-sm font-bold items-center gap-1 transition-colors shadow-md flex">
+                <button id="orders-btn" onclick="window.toggleModal('orders', true)" class="hidden bg-[#00839b] hover:bg-[#005f73] px-3 py-2 rounded-full text-xs md:text-sm font-bold items-center gap-1 transition-colors shadow-md flex">
                     <i data-lucide="clock" class="w-4 h-4"></i>
                     <span class="hidden md:inline">طلباتي</span>
                 </button>
 
-                <button onclick="toggleModal('location', true)" class="hidden md:flex bg-white/10 hover:bg-white/20 px-3 py-2 rounded-full text-sm font-bold items-center gap-1 transition-colors border border-white/20">
+                <button onclick="window.toggleModal('location', true)" class="hidden md:flex bg-white/10 hover:bg-white/20 px-3 py-2 rounded-full text-sm font-bold items-center gap-1 transition-colors border border-white/20">
                     <i data-lucide="map-pin" class="w-4 h-4"></i>
                     <span id="current-location-display">تحديد الموقع</span>
                 </button>
 
-                <div class="relative cursor-pointer hover:scale-105 transition-transform bg-white/10 p-2 rounded-full" id="cart-btn" onclick="toggleModal('cart', true)">
+                <div class="relative cursor-pointer hover:scale-105 transition-transform bg-white/10 p-2 rounded-full" id="cart-btn" onclick="window.toggleModal('cart', true)">
                     <i data-lucide="shopping-cart" class="w-6 h-6"></i>
                     <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-[#002d74] hidden">0</span>
                 </div>
@@ -91,7 +91,7 @@
         </div>
         <div class="md:hidden px-4 pb-3 flex gap-2">
            <input type="text" id="mobile-search" placeholder="ابحث عن منتج..." class="w-full py-2 px-4 rounded-full text-gray-800 focus:outline-none flex-grow text-sm">
-           <button onclick="toggleModal('location', true)" class="bg-white/10 hover:bg-white/20 px-3 py-2 rounded-full text-sm font-bold flex items-center justify-center transition-colors border border-white/20 flex-shrink-0">
+           <button onclick="window.toggleModal('location', true)" class="bg-white/10 hover:bg-white/20 px-3 py-2 rounded-full text-sm font-bold flex items-center justify-center transition-colors border border-white/20 flex-shrink-0">
                 <i data-lucide="map-pin" class="w-5 h-5"></i>
             </button>
         </div>
@@ -134,7 +134,7 @@
                 </button>
             </div>
 
-            <!-- Profile Name Step (New) -->
+            <!-- Profile Name Step -->
             <div id="auth-step-3" class="space-y-4 hidden">
                 <h3 class="text-xl font-bold text-[#002d74]">خطوة أخيرة!</h3>
                 <p class="text-sm text-gray-500">لتوصيل طلباتك، نحتاج لمعرفة اسمك ورقم هاتفك.</p>
@@ -242,7 +242,7 @@
                 
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-1">الموقع الدقيق</label>
-                    <button id="get-location-btn" class="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-[#00839b] text-[#00839b] rounded-xl font-bold hover:bg-[#f0f9fa]">
+                    <button id="get-location-btn" onclick="window.requestLocation()" class="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-[#00839b] text-[#00839b] rounded-xl font-bold hover:bg-[#f0f9fa]">
                         <i data-lucide="crosshair" class="w-5 h-5"></i> <span id="get-location-text">تحديد إحداثيات GPS</span>
                     </button>
                 </div>
@@ -299,7 +299,7 @@
                 <!-- Admin Users -->
                 <div id="admin-users-sec" class="hidden space-y-4">
                     <div class="relative">
-                        <input type="text" id="admin-user-search" oninput="window.renderAdminUsers()" placeholder="ابحث برقم الهاتف..." class="w-full p-3 pr-10 border rounded-xl outline-none focus:ring-2 focus:ring-[#00839b]">
+                        <input type="text" id="admin-user-search" oninput="window.renderAdminUsers()" placeholder="ابحث برقم الهاتف أو الاسم..." class="w-full p-3 pr-10 border rounded-xl outline-none focus:ring-2 focus:ring-[#00839b]">
                         <i data-lucide="search" class="absolute right-3 top-3.5 text-gray-400 w-5 h-5"></i>
                     </div>
                     <div id="admin-users-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
@@ -315,16 +315,29 @@
             <p id="wallet-edit-phone" class="text-xs text-gray-500 mb-4" dir="ltr"></p>
             <div class="space-y-3">
                 <input type="number" step="0.01" id="wallet-edit-balance" placeholder="الرصيد المتاح (د.أ)" class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-green-500 bg-green-50 font-bold text-center text-green-700 text-xl">
-                <button id="btn-save-wallet" onclick="window.saveAdminWallet()" class="w-full bg-[#00839b] text-white py-3 rounded-xl font-bold shadow-md hover:bg-[#005f73]">حفظ الرصيد</button>
+                <button onclick="window.saveAdminWallet()" class="w-full bg-[#00839b] text-white py-3 rounded-xl font-bold shadow-md hover:bg-[#005f73]">حفظ الرصيد</button>
                 <button class="close-modal w-full text-gray-400 py-2 text-sm font-bold">إلغاء</button>
+            </div>
+         </div>
+    </div>
+
+    <!-- Admin Order Details Modal -->
+    <div id="admin-order-details-modal" class="modal fixed inset-0 z-[220] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+         <div class="bg-white rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl relative max-h-[90vh] flex flex-col">
+            <div class="p-4 bg-[#002d74] text-white flex justify-between items-center z-10 shadow-md">
+                <h2 class="text-lg font-bold flex items-center gap-2"><i data-lucide="receipt" class="w-5 h-5"></i> تفاصيل الطلب</h2>
+                <button class="close-modal p-1.5 rounded-full hover:bg-white/20 bg-white/10"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="flex-grow overflow-y-auto p-4 bg-gray-50" id="admin-order-details-content">
+                <!-- Details injected here -->
             </div>
          </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection, query, runTransaction, updateDoc, serverTimestamp, where, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot, collection, query, runTransaction, updateDoc, serverTimestamp, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Configuration
         const APP_ID = typeof __app_id !== 'undefined' ? __app_id : 'farah-snacks-v3';
@@ -338,12 +351,12 @@
         };
         const ADMIN_PASS = '452011';
 
-        // Paths strict compliance
         const PATH_ORDERS = `artifacts/${APP_ID}/public/data/orders`;
         const PATH_PROFILES = `artifacts/${APP_ID}/public/data/profiles`;
+        const STOCK_PATH = `artifacts/${APP_ID}/public/data/products`;
 
-        // Data
         const CATEGORIES = ['الكل', 'المطاعم', 'شيبس', 'شوكولاتة', 'قهوة', 'بسكويت', 'علكة'];
+        
         const RESTAURANTS = [
             { name: 'مطعم سلمة', image: 'https://uploads.onecompiler.io/43n8uttmw/44hm8gjgg/images%20(19).jpeg', desc: 'شاورما ووجبات سريعة', bg: 'bg-white' },
             { name: 'الحموي', image: 'https://uploads.onecompiler.io/43n8uttmw/44hm8gjgg/logo-12-1.png', desc: 'قهوة تركية ومشروبات', bg: 'bg-black' },
@@ -390,18 +403,27 @@
             { id: '14', name: 'شيبس ريلاكس', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445t3c2fr/images__15_-removebg-preview.png' }
         ];
 
+        const COUPONS = { 'راشد50': { type: 'fixed', val: 0.50 } }; 
+
+        const LS_STOCK_KEY = 'snack_market_stock';
+        const LS_CART_KEY = 'snack_market_cart';
+        const LS_LOCATION_KEY = 'snack_market_location';
+
         let appState = {
             db: null, auth: null, user: null, profile: null,
+            isAuthReady: false, 
+            products: PRODUCTS,
             cart: {}, customOrder: '',
             category: 'الكل', currentRestaurant: null, search: '',
-            location: localStorage.getItem('snack_market_location') || null,
-            exactLoc: null, locBypassed: false,
             appliedCoupon: null, appliedCouponCode: '',
-            myOrders: [], adminAllOrders: [], adminAllUsers: []
+            location: localStorage.getItem(LS_LOCATION_KEY) || null,
+            exactLocationLink: null, locationFailCount: 0, exactLocationBypassed: false,
+            adminClickCount: 0, myOrders: [], adminAllOrders: [], adminAllUsers: [], editingUser: null
         };
 
         const showToast = (msg, type) => {
             const c = document.getElementById('toast-container');
+            if(!c) return;
             const el = document.createElement('div');
             el.className = `p-4 rounded-xl shadow-2xl font-bold text-white text-sm transform transition-all ${type==='success'?'bg-green-500':'bg-red-500'}`;
             el.textContent = msg;
@@ -409,38 +431,45 @@
             setTimeout(() => el.remove(), 3000);
         };
 
-        const toggleModal = (id, show) => {
-            const el = document.getElementById(id + '-modal');
+        const toggleModal = (n, s) => {
+            const el = document.getElementById(n + '-modal');
             if(!el) return;
-            if(show){ el.classList.remove('hidden'); setTimeout(()=>el.classList.add('active'), 10); }
+            if(s){ el.classList.remove('hidden'); setTimeout(()=>el.classList.add('active'), 10); }
             else{ el.classList.remove('active'); setTimeout(()=>el.classList.add('hidden'), 300); }
         };
         window.toggleModal = toggleModal;
         document.querySelectorAll('.close-modal').forEach(b => b.onclick = (e) => toggleModal(e.target.closest('.modal').id.replace('-modal',''), false));
 
-        // 1. Firebase Initialization & Auth
-        const initFirebase = () => {
-            try {
-                const app = initializeApp(FIREBASE_CONFIG);
-                appState.db = getFirestore(app);
-                appState.auth = getAuth(app);
-
-                onAuthStateChanged(appState.auth, (user) => {
-                    appState.user = user;
-                    if (user) {
-                        listenToProfile();
-                        listenToOrders();
-                        listenToCart();
-                    } else {
-                        appState.profile = null;
-                        appState.cart = {};
-                        updateAuthUI();
-                        updateCartUI();
-                    }
-                });
-            } catch(e) { console.error("Firebase init err", e); }
-            checkLocation();
+        // 1. Storage & Firebase
+        const loadLocalStock = () => {
+            try { const s = localStorage.getItem(LS_STOCK_KEY); if (s) return JSON.parse(s); } catch (e) {}
+            const def = {}; PRODUCTS.forEach(p => def[p.id] = { productId: p.id, stock: 9999 }); return def;
+        };
+        const saveLocalStock = () => {
+            const m = {}; appState.products.forEach(p => m[p.id] = { productId: p.id, stock: p.stock||9999 });
+            localStorage.setItem(LS_STOCK_KEY, JSON.stringify(m));
+        };
+        const loadLocalCart = () => { try { return JSON.parse(localStorage.getItem(LS_CART_KEY)) || {}; } catch (e) { return {}; } };
+        const saveLocalCart = () => localStorage.setItem(LS_CART_KEY, JSON.stringify(appState.cart));
+        const mergeProductsAndStock = (stockMap) => {
+            appState.products = PRODUCTS.map(p => ({ ...p, stock: stockMap[p.id] ? stockMap[p.id].stock : (p.stock||9999) }));
             renderApp();
+        };
+
+        const initFirestoreStock = async (db) => {
+            try {
+                const snap = await getDocs(collection(db, STOCK_PATH));
+                if (snap.empty) {
+                    const batch = writeBatch(db);
+                    PRODUCTS.forEach(p => batch.set(doc(db, STOCK_PATH, p.id), { productId: p.id, stock: p.stock||9999 }));
+                    await batch.commit();
+                }
+            } catch (e) {}
+        };
+
+        const checkLocation = () => {
+            if (!appState.location) toggleModal('location', true);
+            else document.getElementById('current-location-display').textContent = appState.location;
         };
 
         const listenToProfile = () => {
@@ -448,161 +477,117 @@
                 if(snap.exists() && snap.data().phone && snap.data().name) {
                     appState.profile = snap.data();
                     updateAuthUI();
-                    if(!document.getElementById('auth-step-3').classList.contains('hidden')) {
-                        toggleModal('auth', false);
-                    }
+                    if(!document.getElementById('auth-step-3').classList.contains('hidden')) toggleModal('auth', false);
                 } else {
                     appState.profile = snap.exists() ? snap.data() : { balance: 0 };
-                    
-                    if(appState.user.displayName) {
-                        document.getElementById('new-user-name').value = appState.user.displayName;
-                    }
-                    
+                    if(appState.user.displayName) document.getElementById('new-user-name').value = appState.user.displayName;
                     document.getElementById('auth-step-1').classList.add('hidden');
                     document.getElementById('auth-profile').classList.add('hidden');
                     document.getElementById('auth-step-3').classList.remove('hidden');
-                    const authSubtitle = document.getElementById('auth-subtitle');
-                    if(authSubtitle) authSubtitle.classList.add('hidden');
-                    
-                    document.getElementById('auth-modal').classList.remove('hidden');
-                    document.getElementById('auth-modal').classList.add('active');
+                    document.getElementById('auth-subtitle')?.classList.add('hidden');
+                    toggleModal('auth', true);
                 }
             });
         };
 
         const listenToCart = () => {
             onSnapshot(collection(appState.db, `artifacts/${APP_ID}/users/${appState.user.uid}/cartItems`), (snap) => {
-                appState.cart = {};
-                snap.forEach(d => appState.cart[d.id] = d.data());
-                updateCartUI();
+                appState.cart = {}; snap.forEach(d => appState.cart[d.id] = d.data()); updateCartUI();
             });
         };
 
         const listenToOrders = () => {
-            // Get user's orders within last 30 days
             onSnapshot(collection(appState.db, PATH_ORDERS), (snap) => {
-                const all = [];
-                snap.forEach(d => all.push({id: d.id, ...d.data()}));
-                
-                // For Admin
-                appState.adminAllOrders = all;
-                if(document.getElementById('admin-panel-modal').classList.contains('active')) renderAdminOrders();
+                let hasNew = false;
+                if (appState.adminAllOrders.length > 0) {
+                    snap.docChanges().forEach(change => {
+                        if (change.type === 'added') hasNew = true;
+                    });
+                }
+                if (hasNew) {
+                    showToast("🔔 طلب جديد! تفقد لوحة الإدارة", "success");
+                    try { new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg').play(); } catch(e){}
+                }
 
-                // For User (Filter locally to comply with complex query rules)
-                const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
-                appState.myOrders = all.filter(o => 
-                    o.uid === appState.user.uid && 
-                    (o.createdAt?.toMillis ? o.createdAt.toMillis() : Date.now()) > thirtyDaysAgo
-                ).sort((a,b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-                
-                renderMyOrders();
+                const all = []; snap.forEach(d => all.push({id: d.id, ...d.data()}));
+                appState.adminAllOrders = all;
+                if(document.getElementById('admin-panel-modal').classList.contains('active')) window.renderAdminOrders();
+                const ago = Date.now() - (30 * 24 * 60 * 60 * 1000);
+                appState.myOrders = all.filter(o => o.uid === appState.user.uid && (o.createdAt?.toMillis ? o.createdAt.toMillis() : Date.now()) > ago).sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+                window.renderMyOrders();
             });
         };
 
-        // Auth Methods
+        const initDataListeners = () => {
+            if (!appState.userId || appState.db === 'LOCAL') return;
+            onSnapshot(query(collection(appState.db, STOCK_PATH)), (snap) => {
+                const stockMap = {}; snap.docs.forEach(d => stockMap[d.id] = d.data()); mergeProductsAndStock(stockMap); 
+            });
+        };
+
+        const initFirebase = async () => {
+            try {
+                const app = initializeApp(FIREBASE_CONFIG);
+                appState.db = getFirestore(app);
+                appState.auth = getAuth(app);
+                onAuthStateChanged(appState.auth, (user) => {
+                    appState.user = user;
+                    if (user) {
+                        appState.userId = user.uid;
+                        listenToProfile(); listenToOrders(); listenToCart(); initDataListeners(); initFirestoreStock(appState.db);
+                    } else {
+                        appState.profile = null; appState.cart = {}; updateAuthUI(); updateCartUI();
+                    }
+                    appState.isAuthReady = true; checkLocation(); renderProducts(); 
+                });
+            } catch (e) {
+                appState.db = 'LOCAL'; appState.isAuthReady = true;
+                mergeProductsAndStock(loadLocalStock()); appState.cart = loadLocalCart();
+                updateCartUI(); checkLocation();
+            }
+        };
+
+        // 2. Auth Methods
         window.googleLogin = () => {
             const provider = new GoogleAuthProvider();
-            signInWithPopup(appState.auth, provider).then((result) => {
-                showToast('تم تسجيل الدخول بنجاح!', 'success');
-            }).catch((error) => {
-                console.error(error);
-                showToast('حدث خطأ أو تم إلغاء تسجيل الدخول', 'error');
-            });
+            signInWithPopup(appState.auth, provider).then(() => showToast('تم تسجيل الدخول!', 'success')).catch(() => showToast('خطأ بالدخول', 'error'));
         };
 
         window.saveUserProfile = async () => {
             const name = document.getElementById('new-user-name').value.trim();
             const phone = document.getElementById('new-user-phone').value.trim();
-            if(name.length < 3) return showToast("يرجى إدخال اسم صحيح", "error");
-            if(phone.length < 9) return showToast("يرجى إدخال رقم هاتف صحيح", "error");
-
+            if(name.length < 3) return showToast("أدخل اسم صحيح", "error");
+            if(phone.length < 9) return showToast("أدخل رقم هاتف صحيح", "error");
             try {
-                const profileData = {
-                    email: appState.user.email,
-                    name: name,
-                    phone: phone,
-                    balance: appState.profile?.balance || 0
-                };
-                await setDoc(doc(appState.db, PATH_PROFILES, appState.user.uid), profileData, { merge: true });
-                showToast("تم حفظ البيانات بنجاح", "success");
-                toggleModal('auth', false);
-            } catch(e) {
-                console.error(e);
-                showToast("حدث خطأ أثناء الحفظ", "error");
-            }
+                await setDoc(doc(appState.db, PATH_PROFILES, appState.user.uid), { email: appState.user.email||'', name: name, phone: phone, balance: appState.profile?.balance||0 }, { merge: true });
+                showToast("تم الحفظ", "success"); toggleModal('auth', false);
+            } catch(e) { showToast("حدث خطأ", "error"); }
         };
 
-        window.logoutUser = () => {
-            signOut(appState.auth).then(() => {
-                toggleModal('auth', false);
-                showToast('تم تسجيل الخروج', 'success');
-            });
-        };
+        window.logoutUser = () => signOut(appState.auth).then(() => { toggleModal('auth', false); showToast('تم تسجيل الخروج', 'success'); });
 
         const updateAuthUI = () => {
             const loggedIn = !!appState.user;
             document.getElementById('auth-btn-text').textContent = loggedIn && appState.profile?.name ? appState.profile.name.split(' ')[0] : (loggedIn ? 'حسابي' : 'دخول');
             document.getElementById('orders-btn').classList.toggle('hidden', !loggedIn);
             
-            // Header Wallet
             const walletDisp = document.getElementById('wallet-display');
             if(loggedIn && appState.profile && appState.profile.name) {
-                walletDisp.classList.remove('hidden');
-                document.getElementById('header-balance').textContent = (appState.profile.balance || 0).toFixed(2);
-            } else {
-                walletDisp.classList.add('hidden');
-            }
+                walletDisp.classList.remove('hidden'); document.getElementById('header-balance').textContent = (appState.profile.balance||0).toFixed(2);
+            } else walletDisp.classList.add('hidden');
 
-            // Modal Profile
             document.getElementById('auth-step-1').classList.toggle('hidden', loggedIn);
             document.getElementById('auth-step-3').classList.add('hidden');
-            const authSubtitle = document.getElementById('auth-subtitle');
-            if(authSubtitle) authSubtitle.classList.toggle('hidden', loggedIn);
+            document.getElementById('auth-subtitle')?.classList.toggle('hidden', loggedIn);
             document.getElementById('auth-profile').classList.toggle('hidden', !loggedIn);
             
             if(loggedIn && appState.profile?.name) {
                 document.getElementById('profile-phone').textContent = appState.profile.name;
-                document.getElementById('profile-wallet').textContent = (appState.profile.balance || 0).toFixed(2);
+                document.getElementById('profile-wallet').textContent = (appState.profile.balance||0).toFixed(2);
             }
         };
 
-        // 2. Orders UI (Timeline & Animations)
-        const getStatusData = (status) => {
-            if(status.includes('قيد التحضير')) return { text: 'قيد التحضير', color: 'text-orange-500', bg: 'bg-orange-100', anim: 'anim-cooking', icon: '🍳' };
-            if(status.includes('في الطريق')) return { text: 'في الطريق', color: 'text-blue-500', bg: 'bg-blue-100', anim: 'anim-driving', icon: '🛵' };
-            if(status.includes('تم التوصيل') || status.includes('تم التسليم')) return { text: 'تم التوصيل', color: 'text-green-500', bg: 'bg-green-100', anim: 'anim-done', icon: '✅' };
-            return { text: 'قيد الانتظار', color: 'text-gray-500', bg: 'bg-gray-200', anim: '', icon: '⏳' };
-        };
-
-        const renderMyOrders = () => {
-            const container = document.getElementById('orders-list-container');
-            if(!appState.myOrders.length) {
-                container.innerHTML = '<div class="text-center py-10 text-gray-400"><i data-lucide="inbox" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>لا توجد طلبات حديثة</p></div>';
-                lucide.createIcons(); return;
-            }
-            
-            container.innerHTML = appState.myOrders.map(o => {
-                const s = getStatusData(o.status);
-                return `
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
-                    <div class="flex justify-between items-center mb-3 border-b border-gray-50 pb-2">
-                        <span class="text-xs text-gray-400 font-bold">طلب #${o.id.substring(0,6)}</span>
-                        <div class="flex items-center gap-2 px-3 py-1 rounded-full ${s.bg} ${s.color} text-xs font-bold">
-                            <span class="text-lg ${s.anim}">${s.icon}</span> ${s.text}
-                        </div>
-                    </div>
-                    <div class="text-xs space-y-1.5 mb-3 text-gray-600 font-medium">
-                        ${o.items.map(i => `<div>${i.quantity}x ${i.product.name} ${i.option?`(${i.option})`:''}</div>`).join('')}
-                    </div>
-                    <div class="flex justify-between items-center pt-2">
-                        <span class="text-[10px] font-bold bg-gray-100 px-2 py-1 rounded text-gray-500">الدفع: ${o.paymentMethod==='wallet'?'محفظة':'كاش'}</span>
-                        <span class="font-black text-[#002d74] text-lg">${o.total.toFixed(2)} د.أ</span>
-                    </div>
-                </div>`;
-            }).join('');
-        };
-
-        // 3. Main App Logic (Cart, Products, Category)
+        // 3. Main App Logic
         const calculateTotals = () => {
             const items = Object.values(appState.cart);
             const sub = items.reduce((sum, i) => sum + (i.product.price * i.quantity), 0);
@@ -615,49 +600,27 @@
         };
 
         window.setLocation = (loc) => {
-            appState.location = loc;
-            localStorage.setItem('snack_market_location', loc);
-            appState.category = 'الكل'; appState.currentRestaurant = null;
-            document.getElementById('current-location-display').textContent = loc;
-            toggleModal('location', false);
-            renderApp();
-            showToast(`تم تغيير الموقع إلى: ${loc}`, 'success');
-        };
-
-        const checkLocation = () => {
-            if (!appState.location) toggleModal('location', true);
-            else document.getElementById('current-location-display').textContent = appState.location;
+            appState.location = loc; localStorage.setItem(LS_LOCATION_KEY, loc); appState.category = 'الكل'; appState.currentRestaurant = null;
+            document.getElementById('current-location-display').textContent = loc; toggleModal('location', false); renderApp(); showToast(`الموقع: ${loc}`, 'success');
         };
 
         const renderCategories = () => {
-            const container = document.getElementById('categories-container');
+            const c = document.getElementById('categories-container'); if(!c) return;
             const cats = appState.location === 'البوليفارد' ? ['الكل', 'المطاعم'] : CATEGORIES;
-            container.innerHTML = cats.map(c => `
-                <button class="px-5 py-2 rounded-full whitespace-nowrap text-sm font-bold transition-colors shadow-sm border 
-                ${appState.category === c ? 'bg-[#00839b] text-white border-[#00839b]' : 'bg-white text-gray-500 hover:bg-gray-50'}" 
-                onclick="window.setCategory('${c}')">${c}</button>
-            `).join('');
+            c.innerHTML = cats.map(cat => `<button class="px-5 py-2 rounded-full whitespace-nowrap text-sm font-bold transition-colors shadow-sm border ${appState.category === cat ? 'bg-[#00839b] text-white border-[#00839b]' : 'bg-white text-gray-500 hover:bg-gray-50'}" onclick="window.setCategory('${cat}')">${cat}</button>`).join('');
         };
 
         window.setCategory = (c) => { appState.category = c; appState.currentRestaurant = null; renderApp(); };
-        window.openRestaurant = (name) => { appState.currentRestaurant = name; renderProducts(); };
+        window.openRestaurant = (n) => { appState.currentRestaurant = n; renderProducts(); };
         window.updateCustomOrder = (v) => { appState.customOrder = v; updateCartUI(); };
-        window.confirmCustomOrder = () => {
-            appState.customOrder = document.getElementById('custom-order-input').value;
-            updateCartUI(); showToast("تم تأكيد وإضافة المنتج الإضافي!", "success");
-        };
+        window.confirmCustomOrder = () => { appState.customOrder = document.getElementById('custom-order-input').value; updateCartUI(); showToast("تم تأكيد الإضافة!", "success"); };
 
         const renderProducts = () => {
+            document.getElementById('loading-indicator').classList.add('hidden');
             let contentHtml = '', backHtml = '', customOrderHtml = '';
             
-            // Custom Order Box (Only inside restaurants)
             if (appState.currentRestaurant && ['سناكات', 'مطعم سلمة', 'الحموي', 'انكل اوساكا'].includes(appState.currentRestaurant)) {
-                customOrderHtml = `
-                    <div class="col-span-2 md:col-span-3 lg:col-span-4 mt-6 bg-[#f0f9fa] rounded-3xl border border-[#00839b]/20 p-5 shadow-sm">
-                        <h3 class="font-bold text-[#002d74] text-base mb-3 flex items-center gap-2"><i data-lucide="help-circle" class="w-5 h-5 text-[#00839b]"></i> هل الذي تبحث عنه غير موجود؟</h3>
-                        <textarea id="custom-order-input" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#00839b] outline-none text-sm mb-3" rows="2" placeholder="اكتب المنتج الذي تريده هنا...">${appState.customOrder}</textarea>
-                        <button onclick="window.confirmCustomOrder()" class="w-full bg-[#00839b] text-white py-3 rounded-xl font-bold shadow-md hover:bg-[#005f73] transition-colors text-sm">تأكيد اختيار المنتج الإضافي للسلة</button>
-                    </div>`;
+                customOrderHtml = `<div class="col-span-2 md:col-span-3 lg:col-span-4 mt-6 bg-[#f0f9fa] rounded-3xl border border-[#00839b]/20 p-5 shadow-sm"><h3 class="font-bold text-[#002d74] text-base mb-3 flex items-center gap-2"><i data-lucide="help-circle" class="w-5 h-5 text-[#00839b]"></i> هل الذي تبحث عنه غير موجود؟</h3><textarea id="custom-order-input" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#00839b] outline-none text-sm mb-3" rows="2" placeholder="اكتب المنتج الذي تريده هنا...">${appState.customOrder}</textarea><button onclick="window.confirmCustomOrder()" class="w-full bg-[#00839b] text-white py-3 rounded-xl font-bold shadow-md hover:bg-[#005f73] transition-colors text-sm">تأكيد اختيار المنتج الإضافي للسلة</button></div>`;
             }
 
             const allowedRest = appState.location === 'البوليفارد' ? ['الحموي', 'انكل اوساكا'] : ['مطعم سلمة', 'سناكات'];
@@ -665,31 +628,15 @@
 
             if (appState.currentRestaurant) {
                 const r = RESTAURANTS.find(x => x.name === appState.currentRestaurant);
-                backHtml = `
-                <div class="col-span-2 md:col-span-3 lg:col-span-4 flex items-center gap-4 bg-white rounded-3xl shadow-sm border border-gray-100 p-4 mb-4">
-                    <div class="h-14 w-14 rounded-full border border-gray-100 shadow-sm overflow-hidden flex justify-center items-center ${r?.bg||'bg-white'}">
-                        <img src="${r?.image}" class="max-h-full max-w-full object-contain ${r?.bg==='bg-black'?'p-1':''}">
-                    </div>
-                    <div><h2 class="text-xl font-bold text-[#002d74]">${appState.currentRestaurant}</h2><p class="text-xs text-gray-500">${r?.desc}</p></div>
-                    <button class="mr-auto bg-gray-50 p-2 md:px-4 md:py-2 rounded-xl hover:bg-gray-100 flex items-center gap-2 border" onclick="window.setCategory('${appState.category}')">
-                        <span class="font-bold text-xs hidden md:block">رجوع</span><i data-lucide="arrow-right" class="w-4 h-4"></i>
-                    </button>
-                </div>`;
+                backHtml = `<div class="col-span-2 md:col-span-3 lg:col-span-4 flex items-center gap-4 bg-white rounded-3xl shadow-sm border border-gray-100 p-4 mb-4"><div class="h-14 w-14 rounded-full border border-gray-100 shadow-sm overflow-hidden flex justify-center items-center ${r?.bg||'bg-white'}"><img src="${r?.image}" class="max-h-full max-w-full object-contain ${r?.bg==='bg-black'?'p-1':''}"></div><div><h2 class="text-xl font-bold text-[#002d74]">${appState.currentRestaurant}</h2><p class="text-xs text-gray-500">${r?.desc}</p></div><button class="mr-auto bg-gray-50 p-2 md:px-4 md:py-2 rounded-xl hover:bg-gray-100 flex items-center gap-2 border" onclick="window.setCategory('${appState.category}')"><span class="font-bold text-xs hidden md:block">رجوع</span><i data-lucide="arrow-right" class="w-4 h-4"></i></button></div>`;
             }
 
             if (!appState.currentRestaurant && !appState.search && (appState.category === 'الكل' || appState.category === 'المطاعم')) {
-                contentHtml += visibleRest.map(r => `
-                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-5 flex flex-col items-center justify-center hover:shadow-lg cursor-pointer transition-shadow" onclick="window.openRestaurant('${r.name}')">
-                        <div class="h-24 w-24 mb-3 rounded-full border-4 border-gray-50 shadow-inner flex items-center justify-center overflow-hidden ${r.bg}"><img src="${r.image}" class="max-h-full max-w-full object-contain ${r.bg==='bg-black'?'p-2':''}"></div>
-                        <h3 class="font-bold text-[#002d74] text-lg">${r.name}</h3><p class="text-xs text-gray-400 mt-1">${r.desc}</p>
-                    </div>`).join('');
-                if (appState.category === 'المطاعم') {
-                    document.getElementById('products-grid').innerHTML = contentHtml;
-                    lucide.createIcons(); return;
-                }
+                contentHtml += visibleRest.map(r => `<div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-5 flex flex-col items-center justify-center hover:shadow-lg cursor-pointer transition-shadow" onclick="window.openRestaurant('${r.name}')"><div class="h-24 w-24 mb-3 rounded-full border-4 border-gray-50 shadow-inner flex items-center justify-center overflow-hidden ${r.bg}"><img src="${r.image}" class="max-h-full max-w-full object-contain ${r.bg==='bg-black'?'p-2':''}"></div><h3 class="font-bold text-[#002d74] text-lg">${r.name}</h3><p class="text-xs text-gray-400 mt-1">${r.desc}</p></div>`).join('');
+                if (appState.category === 'المطاعم') { document.getElementById('products-grid').innerHTML = contentHtml; if(window.lucide) lucide.createIcons(); return; }
             }
 
-            let filtered = PRODUCTS.filter(p => {
+            let filtered = appState.products.filter(p => {
                 if (p.hideFromMenu) return false;
                 if (appState.location === 'البوليفارد' && p.restaurant !== 'الحموي' && p.restaurant !== 'انكل اوساكا') return false;
                 if (appState.location === 'ضاحية الاستقلال' && (p.restaurant === 'الحموي' || p.restaurant === 'انكل اوساكا')) return false;
@@ -705,32 +652,19 @@
             
             contentHtml += filtered.map(p => {
                 let qty = 0;
-                if (['24','27','28','31'].includes(p.id)) {
-                    Object.keys(appState.cart).forEach(k => { if(k.startsWith(p.id)) qty += appState.cart[k].quantity; });
-                } else qty = appState.cart[p.id]?.quantity || 0;
+                if (['24','27','28','31'].includes(p.id)) Object.keys(appState.cart).forEach(k => { if(k.startsWith(p.id)) qty += appState.cart[k].quantity; });
+                else qty = appState.cart[p.id]?.quantity || 0;
 
-                let action = qty > 0 ? (
-                    ['24','27','28','31'].includes(p.id) ? 
-                    `<div class="flex items-center gap-2 bg-gray-50 rounded-full p-1 border" onclick="event.stopPropagation()"><button class="w-7 h-7 bg-white rounded-full text-[#00839b] font-bold shadow-sm" onclick="window.addItem('${p.id}')">+</button><span class="font-bold text-sm min-w-[1rem] text-center">${qty}</span></div>` :
-                    `<div class="flex items-center gap-2 bg-gray-50 rounded-full p-1 border" onclick="event.stopPropagation()"><button class="w-7 h-7 bg-white rounded-full text-[#00839b] font-bold shadow-sm" onclick="window.updateQty('${p.id}', 1)">+</button><span class="font-bold text-sm min-w-[1rem] text-center">${qty}</span><button class="w-7 h-7 bg-white rounded-full text-red-500 font-bold shadow-sm" onclick="window.updateQty('${p.id}', -1)">-</button></div>`
-                ) : `<button class="bg-[#002d74] text-white p-2 rounded-full shadow-md hover:scale-105 transition-transform" onclick="event.stopPropagation(); window.addItem('${p.id}')"><i data-lucide="plus" class="w-4 h-4"></i></button>`;
+                let action = qty > 0 ? (['24','27','28','31'].includes(p.id) ? `<div class="flex items-center gap-2 bg-gray-50 rounded-full p-1 border" onclick="event.stopPropagation()"><button class="w-7 h-7 bg-white rounded-full text-[#00839b] font-bold shadow-sm" onclick="window.addItem('${p.id}')">+</button><span class="font-bold text-sm min-w-[1rem] text-center">${qty}</span></div>` : `<div class="flex items-center gap-2 bg-gray-50 rounded-full p-1 border" onclick="event.stopPropagation()"><button class="w-7 h-7 bg-white rounded-full text-[#00839b] font-bold shadow-sm" onclick="window.updateQty('${p.id}', 1)">+</button><span class="font-bold text-sm min-w-[1rem] text-center">${qty}</span><button class="w-7 h-7 bg-white rounded-full text-red-500 font-bold shadow-sm" onclick="window.updateQty('${p.id}', -1)">-</button></div>`) : `<button class="bg-[#002d74] text-white p-2 rounded-full shadow-md hover:scale-105 transition-transform" onclick="event.stopPropagation(); window.addItem('${p.id}')"><i data-lucide="plus" class="w-4 h-4"></i></button>`;
 
-                return `
-                <div class="bg-white rounded-3xl p-3 shadow-sm hover:shadow-md border border-transparent hover:border-[#00839b]/20 cursor-pointer flex flex-col" onclick="window.openDetails('${p.id}')">
-                    <img src="${p.image}" class="h-28 object-contain mb-3 drop-shadow-sm">
-                    <h3 class="font-bold text-gray-800 text-sm mb-1 truncate">${p.name}</h3>
-                    <div class="mt-auto flex justify-between items-center w-full pt-2">
-                        <span class="font-black text-[#00839b] text-sm">${p.price>0?p.price.toFixed(2)+' د.أ':'خيارات'}</span>
-                        <div>${action}</div>
-                    </div>
-                </div>`;
+                return `<div class="bg-white rounded-3xl p-3 shadow-sm hover:shadow-md border border-transparent hover:border-[#00839b]/20 cursor-pointer flex flex-col" onclick="window.openDetails('${p.id}')"><img src="${p.image}" class="h-28 object-contain mb-3 drop-shadow-sm"><h3 class="font-bold text-gray-800 text-sm mb-1 truncate">${p.name}</h3><div class="mt-auto flex justify-between items-center w-full pt-2"><span class="font-black text-[#00839b] text-sm">${p.price>0?p.price.toFixed(2)+' د.أ':'خيارات'}</span><div>${action}</div></div></div>`;
             }).join('');
 
             document.getElementById('products-grid').innerHTML = backHtml + contentHtml + customOrderHtml;
-            lucide.createIcons();
+            if(window.lucide) lucide.createIcons();
         };
 
-        // Cart & Checkout
+        // 4. Cart & Checkout
         window.addItem = (id) => {
             if(!appState.user) return showToast("قم بتسجيل الدخول أولاً", "error");
             if(id==='24') return window.openCoffeeOptions();
@@ -742,26 +676,25 @@
 
         window.addToCartWithOption = async (id, opt) => {
             if(!appState.user) return;
-            const p = PRODUCTS.find(x => x.id === id);
+            const p = appState.products.find(x => x.id === id);
             const k = opt ? `${id}_${opt}` : id;
             const item = { product: p, quantity: (appState.cart[k]?.quantity||0) + 1, option: opt };
-            await setDoc(doc(appState.db, `artifacts/${APP_ID}/users/${appState.user.uid}/cartItems`, k), item);
-            toggleModal('product', false); showToast(`تمت الإضافة للسلة`, 'success');
+            if (appState.db === 'LOCAL') { appState.cart[k] = item; saveLocalCart(); updateCartUI(); }
+            else { await setDoc(doc(appState.db, `artifacts/${APP_ID}/users/${appState.user.uid}/cartItems`, k), item); }
+            toggleModal('product', false); showToast(`تم الإضافة للسلة`, 'success');
         };
 
         window.updateQty = async (k, d) => {
-            const item = appState.cart[k]; if(!item) return;
-            const q = item.quantity + d;
-            const ref = doc(appState.db, `artifacts/${APP_ID}/users/${appState.user.uid}/cartItems`, k);
-            if(q <= 0) await deleteDoc(ref); else await updateDoc(ref, {quantity: q});
+            const item = appState.cart[k]; if(!item) return; const q = item.quantity + d;
+            if (appState.db === 'LOCAL') { if(q <= 0) delete appState.cart[k]; else appState.cart[k].quantity = q; saveLocalCart(); updateCartUI(); }
+            else { const ref = doc(appState.db, `artifacts/${APP_ID}/users/${appState.user.uid}/cartItems`, k); if(q <= 0) await deleteDoc(ref); else await updateDoc(ref, {quantity: q}); }
         };
 
         window.applyCoupon = () => {
             const c = document.getElementById('coupon-input').value.replace(/\s+/g, '');
             const msg = document.getElementById('coupon-message');
-            const valid = { 'راشد50': { type: 'fixed', val: 0.50 } };
-            if(valid[c]) {
-                appState.appliedCoupon = valid[c]; appState.appliedCouponCode = document.getElementById('coupon-input').value;
+            if(COUPONS[c]) {
+                appState.appliedCoupon = COUPONS[c]; appState.appliedCouponCode = document.getElementById('coupon-input').value;
                 msg.textContent = 'تم تطبيق الخصم!'; msg.className = 'text-xs text-green-600 bg-green-50 p-2 mt-2 rounded block';
             } else {
                 appState.appliedCoupon = null; appState.appliedCouponCode = '';
@@ -773,73 +706,63 @@
         const updateCartUI = () => {
             const items = Object.values(appState.cart);
             const count = items.reduce((s,i)=>s+i.quantity,0);
-            document.getElementById('cart-count').textContent = count;
-            document.getElementById('cart-count').classList.toggle('hidden', count===0);
-            document.getElementById('checkout-btn').disabled = (count===0 && appState.customOrder.trim()==='');
+            const cc = document.getElementById('cart-count');
+            if(cc) { cc.textContent = count; cc.classList.toggle('hidden', count===0); }
+            const cb = document.getElementById('checkout-btn');
+            if(cb) cb.disabled = (count===0 && appState.customOrder.trim()==='');
 
             const c = document.getElementById('cart-items-container');
-            if(c) c.innerHTML = items.length ? items.map(i => `
-                <div class="flex justify-between items-center bg-gray-50 p-3 rounded-2xl border border-gray-100">
-                    <div>
-                        <p class="font-bold text-sm text-[#002d74]">${i.product.name} ${i.option?`<span class="text-[#00839b]">(${i.option})</span>`:''}</p>
-                        <p class="text-xs font-bold text-gray-500">${i.product.price.toFixed(2)} د.أ</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="window.updateQty('${i.option?i.product.id+'_'+i.option:i.product.id}', -1)" class="w-7 h-7 bg-white border rounded-lg font-bold text-gray-600">-</button>
-                        <span class="font-bold text-sm w-4 text-center">${i.quantity}</span>
-                        <button onclick="window.updateQty('${i.option?i.product.id+'_'+i.option:i.product.id}', 1)" class="w-7 h-7 bg-white border rounded-lg font-bold text-gray-600">+</button>
-                    </div>
-                </div>`).join('') : '<p class="text-center py-6 font-bold text-gray-400">السلة فارغة</p>';
+            if(c) c.innerHTML = items.length ? items.map(i => `<div class="flex justify-between items-center bg-gray-50 p-3 rounded-2xl border border-gray-100"><div><p class="font-bold text-sm text-[#002d74]">${i.product.name} ${i.option?`<span class="text-[#00839b]">(${i.option})</span>`:''}</p><p class="text-xs font-bold text-gray-500">${i.product.price.toFixed(2)} د.أ</p></div><div class="flex items-center gap-2"><button onclick="window.updateQty('${i.option?i.product.id+'_'+i.option:i.product.id}', -1)" class="w-7 h-7 bg-white border rounded-lg font-bold text-gray-600">-</button><span class="font-bold text-sm w-4 text-center">${i.quantity}</span><button onclick="window.updateQty('${i.option?i.product.id+'_'+i.option:i.product.id}', 1)" class="w-7 h-7 bg-white border rounded-lg font-bold text-gray-600">+</button></div></div>`).join('') : '<p class="text-center py-6 font-bold text-gray-400">السلة فارغة</p>';
             
             const t = calculateTotals();
-            document.getElementById('cart-subtotal').textContent = t.subtotal.toFixed(2) + ' د.أ';
-            document.getElementById('cart-discount').textContent = t.discount.toFixed(2) + ' د.أ';
-            document.getElementById('cart-delivery').textContent = t.deliveryFee.toFixed(2) + ' د.أ';
-            document.getElementById('cart-service').textContent = t.serviceFee.toFixed(2) + ' د.أ';
-            document.getElementById('cart-total').textContent = t.total.toFixed(2) + ' د.أ';
+            const elsIds = ['cart-subtotal', 'cart-discount', 'cart-delivery', 'cart-service', 'cart-total'];
+            const vals = [t.subtotal, t.discount, t.deliveryFee, t.serviceFee, t.total];
+            elsIds.forEach((id, idx) => { const e = document.getElementById(id); if(e) e.textContent = vals[idx].toFixed(2) + ' د.أ'; });
         };
 
         window.openCheckout = () => {
-            toggleModal('cart', false);
-            document.getElementById('checkout-final-total').textContent = calculateTotals().total.toFixed(2) + ' د.أ';
-            
-            // Pre-fill name if available
-            if(appState.profile && appState.profile.name) {
-                document.getElementById('customer-name').value = appState.profile.name;
-            }
-            
-            appState.exactLoc = null; appState.locBypassed = false; appState.locationFailCount = 0;
-            
+            toggleModal('cart', false); document.getElementById('checkout-final-total').textContent = calculateTotals().total.toFixed(2) + ' د.أ';
+            if(appState.profile?.name) document.getElementById('customer-name').value = appState.profile.name;
+            appState.exactLocationLink = null; appState.exactLocationBypassed = false; appState.locationFailCount = 0;
             const btn = document.getElementById('get-location-btn');
-            btn.className = "w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-[#00839b] text-[#00839b] rounded-xl font-bold hover:bg-[#f0f9fa]";
-            document.getElementById('get-location-text').textContent = "تحديد إحداثيات GPS";
-            
+            if(btn) btn.className = "w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-[#00839b] text-[#00839b] rounded-xl font-bold hover:bg-[#f0f9fa]";
+            const txt = document.getElementById('get-location-text');
+            if(txt) txt.textContent = "تحديد إحداثيات GPS";
             toggleModal('checkout', true);
         };
 
-        document.getElementById('get-location-btn').onclick = () => {
+        window.requestLocation = () => {
             const t = document.getElementById('get-location-text'), btn = document.getElementById('get-location-btn');
             if(!navigator.geolocation) return showToast("جهازك لا يدعم تحديد الموقع", "error");
             t.textContent = "جاري التحديد..."; btn.disabled = true; btn.classList.add('opacity-50');
-            
             navigator.geolocation.getCurrentPosition(p => {
-                appState.exactLoc = `https://www.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`;
-                t.textContent = "تم التحديد ✓";
-                btn.className = "w-full py-3 bg-green-500 text-white rounded-xl font-bold flex justify-center items-center gap-2";
+                appState.exactLocationLink = `https://www.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`;
+                t.textContent = "تم التحديد ✓"; btn.className = "w-full py-3 bg-green-500 text-white rounded-xl font-bold flex justify-center items-center gap-2";
                 btn.disabled = false; btn.classList.remove('opacity-50');
             }, e => {
                 appState.locationFailCount++;
-                if(appState.locationFailCount >= 2) {
-                    appState.locBypassed = true; t.textContent = "تم التخطي (متابعة بدون موقع)";
-                } else t.textContent = "حاول مرة أخرى";
+                if(appState.locationFailCount >= 2) { appState.exactLocationBypassed = true; t.textContent = "تم التخطي (متابعة بدون موقع)"; } 
+                else t.textContent = "حاول مرة أخرى";
                 btn.disabled = false; btn.classList.remove('opacity-50');
             }, { enableHighAccuracy: true, timeout: 5000 });
+        };
+
+        const getOrderMsg = (enc) => {
+            const t = calculateTotals(), e = (em) => `${em} `, b = (tx) => `*${tx}*`;
+            const name = document.getElementById('customer-name').value.trim();
+            const cTxt = appState.customOrder ? `\n────────────────\n${e('📝')} ${b('منتجات أخرى / ملاحظات:')}\n${appState.customOrder}` : '';
+            const iTxt = Object.values(appState.cart).map(i => `🔹 ${i.product.name} ${i.option?`(${i.option})`:''} (الكمية: ${b(i.quantity)}) ➖ ${b((i.quantity*i.product.price).toFixed(2))} د.أ`).join('\n');
+            const exactLocText = appState.exactLocationLink ? `\n${b('الموقع الدقيق (خرائط جوجل):')}\n${appState.exactLocationLink}\n` : '';
+            const couponText = appState.appliedCoupon ? `${e('🏷️')} ${b('رمز قسيمة تم تطبيقه .')} ${appState.appliedCouponCode}\n` : '';
+
+            const msg = `${e('✨')} ${b('طلب جديد من فرح سناكس')} ${e('✨')}\n\n${e('🧑‍💼')} ${b('العميل:')} ${name}\n${e('🗺️')} ${b('المنطقة:')} ${appState.location}\n${exactLocText}────────────────\n${e('🧾')} ${b('الطلبات:')}\n${iTxt||'لا توجد منتجات من القائمة'}${cTxt}\n────────────────\n${e('🛵')} ${b('سعر التوصيل:')} ${b(t.deliveryFee.toFixed(2))} د.أ\n${e('📋')} ${b('رسوم الخدمة:')} ${b(t.serviceFee.toFixed(2))} د.أ\n${couponText}${e('💳')} ${b('المجموع الكلي:')} ${b(t.total.toFixed(2))} د.أ\n\n${e('🚀')} ${b('الرجاء التوصيل!')}`;
+            return enc ? encodeURIComponent(msg) : msg;
         };
 
         window.submitOrder = async () => {
             const name = document.getElementById('customer-name').value.trim();
             if(name.length < 3) return showToast("أدخل اسم صحيح", "error");
-            if(!appState.exactLoc && !appState.locBypassed) return showToast("حدد الموقع الدقيق أولاً", "error");
+            if(!appState.exactLocationLink && !appState.exactLocationBypassed) return showToast("حدد الموقع الدقيق أولاً", "error");
             
             const pay = document.querySelector('input[name="payment_method"]:checked').value;
             const totals = calculateTotals();
@@ -849,50 +772,45 @@
             const original = btn.innerHTML; btn.innerHTML = "جاري الحفظ..."; btn.disabled = true;
 
             try {
+                if(appState.db === 'LOCAL') {
+                    // local handling
+                    appState.customOrder = ''; renderProducts(); toggleModal('checkout', false);
+                    appState.cart = {}; saveLocalCart(); updateCartUI();
+                    showToast("تم إرسال الطلب بنجاح للإدارة!", "success");
+                    btn.innerHTML = original; btn.disabled = false;
+                    return;
+                }
+
                 await runTransaction(appState.db, async (t) => {
                     const oRef = doc(collection(appState.db, PATH_ORDERS));
-                    const oData = {
-                        uid: appState.user.uid, customerName: name, phone: appState.profile.phone,
-                        location: appState.location, exactLocation: appState.exactLoc, customOrder: appState.customOrder,
+                    t.set(oRef, {
+                        uid: appState.user.uid, customerName: name, phone: appState.profile.phone||'',
+                        location: appState.location, exactLocation: appState.exactLocationLink, customOrder: appState.customOrder,
                         items: Object.values(appState.cart), total: totals.total, fees: { delivery: totals.deliveryFee, service: totals.serviceFee, discount: totals.discount, coupon: appState.appliedCouponCode },
                         paymentMethod: pay, status: 'قيد الانتظار', createdAt: serverTimestamp()
-                    };
-                    t.set(oRef, oData);
+                    });
                     if(pay === 'wallet') t.update(doc(appState.db, PATH_PROFILES, appState.user.uid), { balance: appState.profile.balance - totals.total });
                     Object.keys(appState.cart).forEach(k => t.delete(doc(appState.db, `artifacts/${APP_ID}/users/${appState.user.uid}/cartItems`, k)));
                 });
                 
                 appState.customOrder = ''; renderProducts(); toggleModal('checkout', false);
-                
-                // Construct Message for WA
-                const m = getOrderMsg(true);
-                window.open(`https://wa.me/962790166389?text=${m}`, '_blank');
-                
+                showToast("تم إرسال الطلب بنجاح للإدارة!", "success");
             } catch(e) { console.error(e); showToast("حدث خطأ", "error"); }
             btn.innerHTML = original; btn.disabled = false;
         };
 
-        const getOrderMsg = (enc) => {
-            const t = calculateTotals(), e = (em) => `${em} `, b = (tx) => `*${tx}*`;
-            const name = document.getElementById('customer-name').value.trim();
-            const cTxt = appState.customOrder ? `\n────────────────\n${e('📝')} ${b('منتجات أخرى / ملاحظات:')}\n${appState.customOrder}` : '';
-            const iTxt = Object.values(appState.cart).map(i => `🔹 ${i.product.name} ${i.option?`(${i.option})`:''} (الكمية: ${b(i.quantity)}) ➖ ${b((i.quantity*i.product.price).toFixed(2))} د.أ`).join('\n');
-            const msg = `${e('✨')} ${b('طلب جديد من فرح سناكس')} ${e('✨')}\n\n${e('🧑‍💼')} ${b('العميل:')} ${name}\n${e('🗺️')} ${b('المنطقة:')} ${appState.location}\n${appState.exactLoc?`\n${b('الموقع الدقيق:')}\n${appState.exactLoc}\n`:''}────────────────\n${e('🧾')} ${b('الطلبات:')}\n${iTxt||'بدون منتجات من القائمة'}${cTxt}\n────────────────\n${e('🛵')} ${b('سعر التوصيل:')} ${b(t.deliveryFee.toFixed(2))} د.أ\n${e('📋')} ${b('رسوم الخدمة:')} ${b(t.serviceFee.toFixed(2))} د.أ\n${appState.appliedCoupon?`${e('🏷️')} ${b('كود الخصم:')} ${appState.appliedCouponCode}\n`:''}${e('💳')} ${b('المجموع الكلي:')} ${b(t.total.toFixed(2))} د.أ\n\n${e('🚀')} ${b('الرجاء التوصيل!')}`;
-            return enc ? encodeURIComponent(msg) : msg;
-        };
-
-        // Options Dialogs
+        // UI Detail Mappers
         window.openCoffeeOptions = () => {
-            const p = PRODUCTS.find(x => x.id === '24');
+            const p = appState.products.find(x => x.id === '24'); if(!p) return;
             document.getElementById('product-modal-body').innerHTML = `<div class="p-5 text-center"><img src="${p.image}" class="h-40 mx-auto mb-4"><h2 class="text-2xl font-bold text-[#002d74] mb-4">${p.name}</h2><div class="space-y-2"><button onclick="window.addToCartWithOption('24', 'سادة')" class="w-full py-3 bg-gray-50 border rounded-xl font-bold text-[#00839b] hover:bg-[#00839b] hover:text-white">سادة</button><button onclick="window.addToCartWithOption('24', 'حلوة')" class="w-full py-3 bg-gray-50 border rounded-xl font-bold text-[#00839b] hover:bg-[#00839b] hover:text-white">حلوة</button><button onclick="window.addToCartWithOption('24', 'سكر خفيف')" class="w-full py-3 bg-gray-50 border rounded-xl font-bold text-[#00839b] hover:bg-[#00839b] hover:text-white">سكر خفيف</button></div></div>`;
             toggleModal('product', true);
         };
         window.openOsakaOptions = () => {
-            document.getElementById('product-modal-body').innerHTML = `<div class="p-5"><h2 class="text-2xl font-bold text-center text-[#002d74] mb-4">انكل اوساكا</h2><div class="space-y-2" dir="ltr"><button onclick="window.addItem('osaka_1');toggleModal('product',false)" class="w-full flex justify-between py-3 px-4 bg-gray-50 border rounded-xl font-bold text-[#00839b]"><span>Spanish latte</span><span>2.00</span></button><button onclick="window.addItem('osaka_2');toggleModal('product',false)" class="w-full flex justify-between py-3 px-4 bg-gray-50 border rounded-xl font-bold text-[#00839b]"><span>Caramel Latte</span><span>2.50</span></button><button onclick="window.addItem('osaka_3');toggleModal('product',false)" class="w-full flex justify-between py-3 px-4 bg-gray-50 border rounded-xl font-bold text-[#00839b]"><span>Vanilla Latte</span><span>2.50</span></button></div></div>`;
+            document.getElementById('product-modal-body').innerHTML = `<div class="p-5"><h2 class="text-2xl font-bold text-center text-[#002d74] mb-4">انكل اوساكا</h2><div class="space-y-2" dir="ltr"><button onclick="window.addItem('osaka_1');window.toggleModal('product',false)" class="w-full flex justify-between py-3 px-4 bg-gray-50 border rounded-xl font-bold text-[#00839b]"><span>Spanish latte</span><span>2.00</span></button><button onclick="window.addItem('osaka_2');window.toggleModal('product',false)" class="w-full flex justify-between py-3 px-4 bg-gray-50 border rounded-xl font-bold text-[#00839b]"><span>Caramel Latte</span><span>2.50</span></button><button onclick="window.addItem('osaka_3');window.toggleModal('product',false)" class="w-full flex justify-between py-3 px-4 bg-gray-50 border rounded-xl font-bold text-[#00839b]"><span>Vanilla Latte</span><span>2.50</span></button><button onclick="window.addItem('osaka_4');window.toggleModal('product',false)" class="w-full flex justify-between py-3 px-4 bg-gray-50 border rounded-xl font-bold text-[#00839b]"><span>hazelnut latte</span><span>2.50</span></button><button onclick="window.addItem('osaka_5');window.toggleModal('product',false)" class="w-full flex justify-between py-3 px-4 bg-gray-50 border rounded-xl font-bold text-[#00839b]"><span>Pistachio Latte</span><span>2.95</span></button></div></div>`;
             toggleModal('product', true);
         };
         window.openShaninaOptions = () => {
-            document.getElementById('product-modal-body').innerHTML = `<div class="p-5"><h2 class="text-2xl font-bold text-center text-[#002d74] mb-4">أحجام الشنينة</h2><div class="space-y-2"><button onclick="window.addItem('shanina_1');toggleModal('product',false)" class="w-full py-3 bg-gray-50 border rounded-xl font-bold text-[#00839b]">0.50 د.أ</button><button onclick="window.addItem('shanina_2');toggleModal('product',false)" class="w-full py-3 bg-gray-50 border rounded-xl font-bold text-[#00839b]">0.75 د.أ</button><button onclick="window.addItem('shanina_3');toggleModal('product',false)" class="w-full py-3 bg-gray-50 border rounded-xl font-bold text-[#00839b]">1.00 د.أ</button><button onclick="window.addItem('shanina_4');toggleModal('product',false)" class="w-full py-3 bg-gray-50 border rounded-xl font-bold text-[#00839b]">1.25 د.أ</button></div></div>`;
+            document.getElementById('product-modal-body').innerHTML = `<div class="p-5"><h2 class="text-2xl font-bold text-center text-[#002d74] mb-4">أحجام الشنينة</h2><div class="space-y-2"><button onclick="window.addItem('shanina_1');window.toggleModal('product',false)" class="w-full py-3 bg-gray-50 border rounded-xl font-bold text-[#00839b]">0.50 د.أ</button><button onclick="window.addItem('shanina_2');window.toggleModal('product',false)" class="w-full py-3 bg-gray-50 border rounded-xl font-bold text-[#00839b]">0.75 د.أ</button><button onclick="window.addItem('shanina_3');window.toggleModal('product',false)" class="w-full py-3 bg-gray-50 border rounded-xl font-bold text-[#00839b]">1.00 د.أ</button><button onclick="window.addItem('shanina_4');window.toggleModal('product',false)" class="w-full py-3 bg-gray-50 border rounded-xl font-bold text-[#00839b]">1.25 د.أ</button></div></div>`;
             toggleModal('product', true);
         };
         window.openPotatoOptions = () => {
@@ -908,22 +826,44 @@
         };
         window.openDetails = (id) => {
             if(['24','27','28','31'].includes(id)) { window.addItem(id); return; }
-            const p = PRODUCTS.find(x => x.id === id);
-            document.getElementById('product-modal-body').innerHTML = `<div class="p-5 text-center"><img src="${p.image}" class="h-48 mx-auto mb-4 object-contain"><h2 class="text-2xl font-bold text-[#002d74] mb-2">${p.name}</h2><p class="font-black text-[#00839b] text-xl mb-4">${p.price.toFixed(2)} د.أ</p><p class="text-sm text-gray-500 mb-6">${p.ingredients||''}</p><button onclick="window.addItem('${id}');toggleModal('product',false)" class="w-full bg-[#00839b] text-white py-3 rounded-xl font-bold shadow-md">إضافة للسلة</button></div>`;
+            const p = appState.products.find(x => x.id === id); if(!p) return;
+            document.getElementById('product-modal-body').innerHTML = `<div class="p-5 text-center"><img src="${p.image}" class="h-48 mx-auto mb-4 object-contain"><h2 class="text-2xl font-bold text-[#002d74] mb-2">${p.name}</h2><p class="font-black text-[#00839b] text-xl mb-4">${p.price.toFixed(2)} د.أ</p><p class="text-sm text-gray-500 mb-6">${p.ingredients||''}</p><button onclick="window.addItem('${id}');window.toggleModal('product',false)" class="w-full bg-[#00839b] text-white py-3 rounded-xl font-bold shadow-md">إضافة للسلة</button></div>`;
             toggleModal('product', true);
         };
 
-        // 4. Admin Panel
+        const getStatusData = (status) => {
+            if(status.includes('قيد التحضير')) return { text: 'قيد التحضير', color: 'text-orange-500', bg: 'bg-orange-100', anim: 'anim-cooking', icon: '🍳' };
+            if(status.includes('في الطريق')) return { text: 'في الطريق', color: 'text-blue-500', bg: 'bg-blue-100', anim: 'anim-driving', icon: '🛵' };
+            if(status.includes('تم التوصيل') || status.includes('تم التسليم')) return { text: 'تم التوصيل', color: 'text-green-500', bg: 'bg-green-100', anim: 'anim-done', icon: '✅' };
+            return { text: 'قيد الانتظار', color: 'text-gray-500', bg: 'bg-gray-200', anim: '', icon: '⏳' };
+        };
+
+        window.renderMyOrders = () => {
+            const container = document.getElementById('orders-list-container');
+            if(!appState.myOrders.length) { container.innerHTML = '<div class="text-center py-10 text-gray-400"><i data-lucide="inbox" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>لا توجد طلبات حديثة</p></div>'; if(window.lucide) lucide.createIcons(); return; }
+            container.innerHTML = appState.myOrders.map(o => {
+                const s = getStatusData(o.status);
+                return `<div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden"><div class="flex justify-between items-center mb-3 border-b border-gray-50 pb-2"><span class="text-xs text-gray-400 font-bold">طلب #${o.id.substring(0,6)}</span><div class="flex items-center gap-2 px-3 py-1 rounded-full ${s.bg} ${s.color} text-xs font-bold"><span class="text-lg ${s.anim}">${s.icon}</span> ${s.text}</div></div><div class="text-xs space-y-1.5 mb-3 text-gray-600 font-medium">${o.items.map(i => `<div>${i.quantity}x ${i.product.name} ${i.option?`(${i.option})`:''}</div>`).join('')}</div><div class="flex justify-between items-center pt-2"><span class="text-[10px] font-bold bg-gray-100 px-2 py-1 rounded text-gray-500">الدفع: ${o.paymentMethod==='wallet'?'محفظة':'كاش'}</span><span class="font-black text-[#002d74] text-lg">${o.total.toFixed(2)} د.أ</span></div></div>`;
+            }).join('');
+        };
+
+        // 5. Admin Panel
         window.handleLogoClick = () => {
             appState.adminClickCount++;
             if(appState.adminClickCount >= 10) { appState.adminClickCount=0; toggleModal('admin-auth', true); }
             setTimeout(()=>appState.adminClickCount=0, 3000);
         };
 
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                toggleModal('admin-auth', true);
+            }
+        });
+
         window.adminLogin = () => {
             if(document.getElementById('admin-password-input').value === ADMIN_PASS) {
-                toggleModal('admin-auth', false); toggleModal('admin-panel', true);
-                fetchAdminUsers(); // Fetch users only when admin logs in
+                toggleModal('admin-auth', false); toggleModal('admin-panel', true); window.fetchAdminUsers();
             } else showToast("كلمة مرور خاطئة", "error");
         };
 
@@ -934,37 +874,90 @@
             document.getElementById('tab-users').className = `flex-1 py-3 border-b-4 ${t==='users'?'border-[#00839b] text-[#00839b]':'border-transparent text-gray-400 hover:text-gray-600'}`;
         };
 
-        const renderAdminOrders = () => {
+        window.renderAdminOrders = () => {
             const sec = document.getElementById('admin-orders-sec');
             const sorted = appState.adminAllOrders.sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
             sec.innerHTML = sorted.map(o => `
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200">
-                    <div class="flex justify-between items-start mb-2 border-b pb-2">
-                        <div><h4 class="font-bold text-[#002d74]">${o.customerName}</h4><p class="text-xs text-gray-500">${o.phone}</p></div>
-                        <select onchange="window.updateOrderStatus('${o.id}', this.value)" class="text-xs p-2 border rounded-xl bg-gray-50 font-bold focus:ring-[#00839b]">
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors" onclick="window.showAdminOrderDetails('${o.id}')">
+                    <div class="flex justify-between items-center mb-1">
+                        <h4 class="font-bold text-[#002d74] text-lg">${o.customerName}</h4>
+                        <span class="text-xs px-3 py-1 rounded-full font-bold ${o.status === 'قيد الانتظار' ? 'bg-yellow-100 text-yellow-700' : 'bg-[#00839b]/10 text-[#00839b]'}">${o.status}</span>
+                    </div>
+                    <div class="flex justify-between items-center mt-2">
+                        <p class="text-sm text-gray-500"><i data-lucide="map-pin" class="w-3 h-3 inline"></i> ${o.location} | ${o.items.length} منتجات</p>
+                        <span class="font-black text-[#00839b]">${o.total.toFixed(2)} د.أ</span>
+                    </div>
+                </div>`).join('');
+            if(window.lucide) lucide.createIcons();
+        };
+
+        window.showAdminOrderDetails = (orderId) => {
+            const o = appState.adminAllOrders.find(x => x.id === orderId);
+            if(!o) return;
+            
+            const itemsHtml = o.items.map(i => `
+                <div class="flex items-center gap-3 bg-white p-2 rounded-xl border border-gray-100 mb-2 shadow-sm">
+                    <img src="${i.product.image}" class="w-12 h-12 object-contain rounded-lg">
+                    <div class="flex-grow">
+                        <p class="font-bold text-sm text-[#002d74]">${i.product.name} ${i.option ? `<span class="text-[#00839b]">(${i.option})</span>` : ''}</p>
+                        <p class="text-xs text-gray-500 font-bold">الكمية: <span class="text-gray-800">${i.quantity}</span></p>
+                    </div>
+                    <div class="font-black text-[#00839b]">${(i.quantity * i.product.price).toFixed(2)}</div>
+                </div>
+            `).join('');
+
+            const content = `
+                <div class="space-y-4">
+                    <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm">
+                        <div class="flex justify-between items-center border-b border-gray-100 pb-3 mb-3">
+                            <h4 class="font-bold text-xl text-[#002d74]"><i data-lucide="user" class="w-4 h-4 inline text-gray-400"></i> ${o.customerName}</h4>
+                            <span class="text-xs bg-gray-100 px-3 py-1 rounded-full font-bold text-gray-600">${o.paymentMethod === 'wallet' ? 'دفع محفظة' : 'الدفع كاش'}</span>
+                        </div>
+                        <p class="text-sm font-medium mb-1"><span class="font-bold text-gray-500">المنطقة:</span> ${o.location}</p>
+                        ${o.exactLocation ? `<a href="${o.exactLocation}" target="_blank" class="text-blue-500 hover:text-blue-700 text-sm font-bold flex items-center gap-1 mt-2 bg-blue-50 p-2 rounded-lg w-max"><i data-lucide="map" class="w-4 h-4"></i> فتح الموقع الدقيق (GPS)</a>` : ''}
+                        <p class="text-sm font-medium mt-2"><span class="font-bold text-gray-500">الهاتف:</span> <span dir="ltr">${o.phone || 'غير متوفر'}</span></p>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-bold text-sm text-gray-500 mb-2 flex items-center gap-1"><i data-lucide="shopping-bag" class="w-4 h-4"></i> المنتجات المطلوبة</h4>
+                        ${itemsHtml}
+                        ${o.customOrder ? `<div class="bg-red-50 p-3 rounded-xl border border-red-200 text-sm mt-3"><span class="font-bold text-red-600 flex items-center gap-1 mb-1"><i data-lucide="alert-circle" class="w-4 h-4"></i> ملاحظات إضافية:</span> ${o.customOrder}</div>` : ''}
+                    </div>
+
+                    <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm text-sm space-y-2 font-medium">
+                        <div class="flex justify-between text-gray-500"><span>سعر التوصيل:</span><span>${(o.fees?.delivery||0).toFixed(2)} د.أ</span></div>
+                        <div class="flex justify-between text-gray-500"><span>رسوم الخدمة:</span><span>${(o.fees?.service||0).toFixed(2)} د.أ</span></div>
+                        ${o.fees?.coupon ? `<div class="flex justify-between text-green-600"><span>كود الخصم (${o.fees.coupon}):</span><span>-${(o.fees?.discount||0).toFixed(2)} د.أ</span></div>` : ''}
+                        <div class="flex justify-between border-t border-gray-100 pt-3 mt-1 font-black text-xl text-[#002d74]"><span>المجموع الكلي:</span><span>${o.total.toFixed(2)} د.أ</span></div>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-2xl border border-[#00839b]/30 shadow-sm">
+                        <label class="font-bold text-sm mb-2 block text-[#00839b] flex items-center gap-1"><i data-lucide="activity" class="w-4 h-4"></i> تحديث حالة الطلب:</label>
+                        <select onchange="window.updateOrderStatus('${o.id}', this.value)" class="w-full p-3 border border-gray-200 rounded-xl bg-gray-50 font-bold focus:ring-2 focus:ring-[#00839b] outline-none transition-shadow">
                             <option ${o.status==='قيد الانتظار'?'selected':''}>قيد الانتظار</option>
                             <option ${o.status==='قيد التحضير'?'selected':''}>قيد التحضير</option>
                             <option ${o.status==='في الطريق'?'selected':''}>في الطريق</option>
                             <option ${o.status==='تم التوصيل'?'selected':''}>تم التوصيل</option>
                         </select>
                     </div>
-                    <div class="text-xs space-y-1 my-2 font-medium text-gray-600">
-                        ${o.items.map(i=>`<div>${i.quantity}x ${i.product.name}</div>`).join('')}
-                        ${o.customOrder?`<div class="text-red-500">ملاحظة: ${o.customOrder}</div>`:''}
-                    </div>
-                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg mt-2">
-                        <span class="text-xs font-bold text-gray-500">${o.paymentMethod==='wallet'?'دفع محفظة':'دفع كاش'}</span>
-                        <span class="font-black text-[#00839b]">${o.total.toFixed(2)} د.أ</span>
-                    </div>
-                </div>`).join('');
+                </div>
+            `;
+            document.getElementById('admin-order-details-content').innerHTML = content;
+            if(window.lucide) lucide.createIcons();
+            toggleModal('admin-order-details', true);
         };
 
         window.updateOrderStatus = async (id, s) => {
             await updateDoc(doc(appState.db, PATH_ORDERS, id), { status: s });
             showToast("تم تحديث حالة الطلب", "success");
+            // Update the UI immediately without waiting for snap
+            const o = appState.adminAllOrders.find(x => x.id === id);
+            if(o) o.status = s;
+            window.renderAdminOrders();
         };
 
-        const fetchAdminUsers = async () => {
+        window.fetchAdminUsers = async () => {
+            if(appState.db === 'LOCAL') return;
             const snap = await getDocs(collection(appState.db, PATH_PROFILES));
             appState.adminAllUsers = []; snap.forEach(d => appState.adminAllUsers.push({uid: d.id, ...d.data()}));
             window.renderAdminUsers();
@@ -973,40 +966,40 @@
         window.renderAdminUsers = () => {
             const term = document.getElementById('admin-user-search').value.trim();
             const list = document.getElementById('admin-users-list');
-            const filtered = appState.adminAllUsers.filter(u => (u.phone||'').includes(term));
-            
-            list.innerHTML = filtered.map(u => `
-                <div class="bg-white p-4 rounded-2xl shadow-sm border flex justify-between items-center">
-                    <div dir="ltr"><p class="font-bold text-sm text-gray-800">${u.phone}</p><p class="text-xs font-bold text-green-600">الرصيد: ${(u.balance||0).toFixed(2)}</p></div>
-                    <button onclick="window.openAdminWallet('${u.uid}', '${u.phone}', ${u.balance||0})" class="bg-[#002d74] text-white p-2 rounded-xl text-xs font-bold">تعديل رصيد</button>
-                </div>`).join('');
+            const filtered = appState.adminAllUsers.filter(u => (u.phone||'').includes(term) || (u.name||'').includes(term));
+            list.innerHTML = filtered.map(u => `<div class="bg-white p-4 rounded-2xl shadow-sm border flex justify-between items-center"><div dir="ltr"><p class="font-bold text-sm text-gray-800">${u.name||'بدون اسم'} - ${u.phone||''}</p><p class="text-xs font-bold text-green-600">الرصيد: ${(u.balance||0).toFixed(2)}</p></div><button onclick="window.openAdminWallet('${u.uid}', '${u.phone||u.name}', ${u.balance||0})" class="bg-[#002d74] text-white p-2 rounded-xl text-xs font-bold">تعديل رصيد</button></div>`).join('');
         };
 
-        let editingUser = null;
-        window.openAdminWallet = (uid, phone, bal) => {
-            editingUser = uid;
-            document.getElementById('wallet-edit-phone').textContent = phone;
+        window.openAdminWallet = (uid, nameOrPhone, bal) => {
+            appState.editingUser = uid;
+            document.getElementById('wallet-edit-phone').textContent = nameOrPhone;
             document.getElementById('wallet-edit-balance').value = bal;
             toggleModal('admin-wallet', true);
         };
 
         window.saveAdminWallet = async () => {
             const bal = parseFloat(document.getElementById('wallet-edit-balance').value) || 0;
-            const btn = document.getElementById('btn-save-wallet'); btn.disabled=true; btn.textContent='جاري الحفظ...';
             try {
-                await updateDoc(doc(appState.db, PATH_PROFILES, editingUser), { balance: bal });
-                const u = appState.adminAllUsers.find(x=>x.uid===editingUser); if(u) u.balance = bal;
+                await updateDoc(doc(appState.db, PATH_PROFILES, appState.editingUser), { balance: bal });
+                const u = appState.adminAllUsers.find(x=>x.uid===appState.editingUser); if(u) u.balance = bal;
                 window.renderAdminUsers(); toggleModal('admin-wallet', false); showToast("تم تحديث الرصيد", "success");
-            } catch(e) { showToast("خطأ", "error"); }
-            btn.disabled=false; btn.textContent='حفظ الرصيد';
+            } catch(e) { showToast("خطأ بالاتصال", "error"); }
         };
 
-        // Search Events
+        // Events
         const handleSearch = (e) => { appState.search = e.target.value.trim(); renderProducts(); };
         document.getElementById('desktop-search')?.addEventListener('input', handleSearch);
         document.getElementById('mobile-search')?.addEventListener('input', handleSearch);
 
-        const renderApp = () => { renderCategories(); renderProducts(); lucide.createIcons(); };
+        // Keyboard shortcut for Admin Panel (Ctrl + Enter)
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                toggleModal('admin-auth', true);
+            }
+        });
+
+        const renderApp = () => { renderCategories(); renderProducts(); if(window.lucide) lucide.createIcons(); };
         
         // Start
         initFirebase();
