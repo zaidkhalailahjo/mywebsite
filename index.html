@@ -59,6 +59,7 @@
                     <h1 class="text-xl md:text-2xl font-extrabold tracking-tight mt-1">فرح سناكس</h1>
                     <div id="wallet-display" class="hidden text-xs text-green-300 font-bold flex flex-col gap-0.5 mt-1">
                         <span class="flex items-center gap-1"><i data-lucide="wallet" class="w-3 h-3"></i> الرصيد: <span id="header-balance">0.00</span> د.أ</span>
+                        <span id="header-debt-container" class="hidden flex items-center gap-1 text-red-300"><i data-lucide="alert-circle" class="w-3 h-3"></i> مستحقات: <span id="header-debt">0.00</span> د.أ</span>
                     </div>
                 </div>
             </div>
@@ -164,7 +165,19 @@
                     <p class="text-xs text-red-800 font-bold mb-1">المستحقات غير المدفوعة</p>
                     <p class="text-lg font-black text-red-600"><span id="profile-debt">0.00</span> د.أ</p>
                 </div>
-                <button onclick="window.logoutUser()" class="w-full bg-red-50 text-red-600 py-3 rounded-xl font-bold hover:bg-red-100 transition-colors mt-2">تسجيل الخروج</button>
+                <button onclick="window.confirmLogout()" class="w-full bg-red-50 text-red-600 py-3 rounded-xl font-bold hover:bg-red-100 transition-colors mt-2">تسجيل الخروج</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout Confirmation Modal -->
+    <div id="logout-confirm-modal" class="modal fixed inset-0 z-[160] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl w-full max-w-xs overflow-hidden shadow-2xl relative p-6 text-center">
+            <h2 class="text-xl font-bold text-[#002d74] mb-4">تسجيل الخروج</h2>
+            <p class="text-gray-600 mb-6 font-medium">هل أنت متأكد من تسجيل الخروج؟</p>
+            <div class="flex gap-3">
+                <button onclick="window.executeLogout()" class="flex-1 bg-red-500 text-white py-3 rounded-xl font-bold shadow-md hover:bg-red-600 transition-colors">نعم</button>
+                <button onclick="window.toggleModal('logout-confirm', false)" class="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-200 transition-colors">لا</button>
             </div>
         </div>
     </div>
@@ -380,15 +393,15 @@
             { id: '18', name: 'بسكوت مانيكس', price: 0.05, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445tfdw7r/images__18_-removebg-preview.png' },
             { id: '17', name: 'قهوة العميد 2/1', price: 0.25, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445tfdw7r/Products_Images_online_store_1-removebg-preview.png' },
             { id: '16', name: 'شوكلاتة بريك تايم', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445tfdw7r/images__17_-removebg-preview.png' },
-            { id: '15', name: 'شوكلاتة بريك سوبا', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445tdx6b2/IMG_6071-IDX-removebg-preview.png' },
-            { id: '7', name: 'شيبس بيوقلز جبنة الناشو', price: 0.30, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445t3c2fr/IMG-7394_370x370-removebg-preview.png' },
-            { id: '12', name: 'شيبس روكي', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445t3c2fr/06-18-2025_0139pm2dbfc7c21d37480d6397-removebg-preview.png' },
-            { id: '9', name: 'شيبس سناك ميكس', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445t3c2fr/sd465465f4654dfs654-removebg-preview.png' },
-            { id: '11', name: 'شيبس كانتينا', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445t3c2fr/JOR-6251040001050_800x.webp' },
-            { id: '13', name: 'شيبس بینج رينج', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445t3c2fr/tBVYLZQLm7O4ul18hNZQw0M7OuQpYRmUTTSo1Ut1-removebg-preview.png' },
-            { id: '8', name: 'شيبس تريتوس', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445t3c2fr/images__16_-removebg-preview.png' },
-            { id: '10', name: 'شيبس شبابيك', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445t3c2fr/blackfridayoffers-2023-10-10T174155.525_800x-removebg-preview.png' },  
-            { id: '14', name: 'شيبس ريلاكس', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445t3c2fr/images__15_-removebg-preview.png' }
+            { id: '15', name: 'شوكلاتة بريك سوبا', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/445tdx6b2/IMG_6071-IDX-removebg-preview.png' },
+            { id: '7', name: 'شيبس بيوقلز جبنة الناشو', price: 0.30, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/445t3c2fr/IMG-7394_370x370-removebg-preview.png' },
+            { id: '12', name: 'شيبس روكي', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/445t3c2fr/06-18-2025_0139pm2dbfc7c21d37480d6397-removebg-preview.png' },
+            { id: '9', name: 'شيبس سناك ميكس', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/445t3c2fr/sd465465f4654dfs654-removebg-preview.png' },
+            { id: '11', name: 'شيبس كانتينا', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/445t3c2fr/JOR-6251040001050_800x.webp' },
+            { id: '13', name: 'شيبس بینج رينج', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/445t3c2fr/tBVYLZQLm7O4ul18hNZQw0M7OuQpYRmUTTSo1Ut1-removebg-preview.png' },
+            { id: '8', name: 'شيبس تريتوس', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/445t3c2fr/images__16_-removebg-preview.png' },
+            { id: '10', name: 'شيبس شبابيك', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/445t3c2fr/blackfridayoffers-2023-10-10T174155.525_800x-removebg-preview.png' },  
+            { id: '14', name: 'شيبس ريلاكس', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/445t3c2fr/images__15_-removebg-preview.png' }
         ];
 
         const COUPONS = { 'راشد50': { type: 'fixed', val: 0.50 } }; 
@@ -398,7 +411,7 @@
 
         let appState = {
             db: null, auth: null, user: null, profile: null,
-            isAuthReady: false, listenersInitialized: false,
+            isAuthReady: false, listenersInitialized: false, debtAlertShown: false,
             products: PRODUCTS,
             restaurants: RESTAURANTS,
             cart: {}, customOrder: '',
@@ -416,7 +429,7 @@
             el.className = `p-4 rounded-xl shadow-2xl font-bold text-white text-sm transform transition-all ${type==='success'?'bg-green-500':'bg-red-500'}`;
             el.textContent = msg;
             c.appendChild(el);
-            setTimeout(() => el.remove(), 3000);
+            setTimeout(() => el.remove(), 5000);
         };
 
         const toggleModal = (n, s) => {
@@ -442,6 +455,16 @@
                 if(snap.exists() && snap.data().phone && snap.data().name) {
                     appState.profile = snap.data();
                     updateAuthUI();
+                    
+                    // Alert for debt after 5 seconds of loading profile
+                    if (appState.profile.debt && appState.profile.debt > 0 && !appState.debtAlertShown) {
+                        appState.debtAlertShown = true;
+                        setTimeout(() => {
+                            showToast("عليك مستحقات بقيمة " + appState.profile.debt.toFixed(2) + " د.أ يرجى تسديدها", "error");
+                            try { new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg').play(); } catch(e){}
+                        }, 5000);
+                    }
+
                     if(!document.getElementById('auth-step-3').classList.contains('hidden')) toggleModal('auth', false);
                 } else {
                     appState.profile = snap.exists() ? snap.data() : { balance: 0, debt: 0 };
@@ -550,7 +573,17 @@
             } catch(e) { showToast("حدث خطأ", "error"); }
         };
 
-        window.logoutUser = () => signOut(appState.auth).then(() => { toggleModal('auth', false); showToast('تم تسجيل الخروج', 'success'); });
+        window.confirmLogout = () => {
+            toggleModal('auth', false);
+            toggleModal('logout-confirm', true);
+        };
+
+        window.executeLogout = () => {
+            signOut(appState.auth).then(() => { 
+                toggleModal('logout-confirm', false); 
+                showToast('تم تسجيل الخروج', 'success'); 
+            });
+        };
 
         const updateAuthUI = () => {
             const loggedIn = appState.user && !appState.user.isAnonymous;
@@ -561,6 +594,15 @@
             if(loggedIn && appState.profile && appState.profile.name) {
                 walletDisp.classList.remove('hidden'); 
                 document.getElementById('header-balance').textContent = (appState.profile.balance||0).toFixed(2);
+                
+                const headerDebtContainer = document.getElementById('header-debt-container');
+                if(appState.profile.debt && appState.profile.debt > 0) {
+                    headerDebtContainer.classList.remove('hidden');
+                    document.getElementById('header-debt').textContent = appState.profile.debt.toFixed(2);
+                } else {
+                    headerDebtContainer.classList.add('hidden');
+                }
+
             } else walletDisp.classList.add('hidden');
 
             document.getElementById('auth-step-1').classList.toggle('hidden', loggedIn);
@@ -652,16 +694,22 @@
                     Object.keys(appState.cart).forEach(k => { if(k.startsWith(p.id)) qty += appState.cart[k].quantity; });
                 } else qty = appState.cart[p.id]?.quantity || 0;
 
-                let action = qty > 0 ? 
-                    `<div class="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-full w-[90px] h-10 px-1 shadow-sm" onclick="event.stopPropagation()">
-                        <button class="text-red-500 font-bold text-lg w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded-full transition-colors" onclick="window.updateQty('${p.id}', -1)">-</button>
-                        <span class="font-bold text-[#002d74] text-base mb-0.5">${qty}</span>
-                        <button class="text-[#00839b] font-bold text-lg w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded-full transition-colors" onclick="${['24','27','28','31','zinger'].includes(p.id) ? `window.addItem('${p.id}')` : `window.updateQty('${p.id}', 1)`}">+</button>
-                    </div>` 
-                    : 
-                    `<button class="bg-[#002d74] w-10 h-10 flex items-center justify-center rounded-full text-white shadow-md hover:scale-105 transition-transform" onclick="event.stopPropagation(); window.addItem('${p.id}')">
-                        <i data-lucide="shopping-cart" class="w-5 h-5"></i>
-                    </button>`;
+                let action = '';
+                if (['24','27','28','31','zinger'].includes(p.id)) {
+                    // Products with options: ALWAYS show '+' to force user to choose option from modal
+                    action = `<button class="bg-[#002d74] w-10 h-10 flex items-center justify-center rounded-full text-white shadow-md hover:scale-105 transition-transform" onclick="event.stopPropagation(); window.addItem('${p.id}')"><i data-lucide="plus" class="w-5 h-5"></i></button>`;
+                } else {
+                    // Normal products
+                    if (qty > 0) {
+                        action = `<div class="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-full w-[90px] h-10 px-1 shadow-sm" onclick="event.stopPropagation()">
+                            <button class="text-red-500 font-bold text-lg w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded-full transition-colors" onclick="window.updateQty('${p.id}', -1)">-</button>
+                            <span class="font-bold text-[#002d74] text-base mb-0.5">${qty}</span>
+                            <button class="text-[#00839b] font-bold text-lg w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded-full transition-colors" onclick="window.updateQty('${p.id}', 1)">+</button>
+                        </div>`;
+                    } else {
+                        action = `<button class="bg-[#002d74] w-10 h-10 flex items-center justify-center rounded-full text-white shadow-md hover:scale-105 transition-transform" onclick="event.stopPropagation(); window.addItem('${p.id}')"><i data-lucide="shopping-cart" class="w-5 h-5"></i></button>`;
+                    }
+                }
 
                 return `<div class="bg-white rounded-3xl p-3 shadow-sm hover:shadow-md border border-transparent hover:border-[#00839b]/20 cursor-pointer flex flex-col" onclick="window.openDetails('${p.id}')"><img src="${p.image}" class="h-28 object-contain mb-3 drop-shadow-sm"><h3 class="font-bold text-gray-800 text-sm mb-1 truncate">${p.name}</h3><div class="mt-auto flex justify-between items-center w-full pt-2"><span class="font-black text-[#00839b] text-sm">${p.price>0?p.price.toFixed(2)+' د.أ':'خيارات'}</span><div>${action}</div></div></div>`;
             }).join('');
@@ -858,13 +906,13 @@
         const getStatusData = (status) => {
             if(status.includes('قيد التحضير') || status.includes('تم قبول')) return { text: status, color: 'text-orange-500', bg: 'bg-orange-100', anim: 'anim-cooking', icon: '🍳' };
             if(status.includes('في الطريق') || status.includes('قيد التوصيل') || status.includes('استلام')) return { text: status, color: 'text-blue-500', bg: 'bg-blue-100', anim: 'anim-driving', icon: '🛵' };
-            if(status.includes('تم التوصيل') || status.includes('تم التسليم')) return { text: status, color: 'text-green-500', bg: 'bg-green-100', anim: 'anim-done', icon: '✅' };
+            if(status.includes('5. تم توصيل الطلب بنجاح') || status.includes('تم التوصيل') || status.includes('تم التسليم')) return { text: 'تم توصيل الطلب بنجاح', color: 'text-green-500', bg: 'bg-green-100', anim: 'anim-done', icon: '✅' };
             return { text: status, color: 'text-gray-500', bg: 'bg-gray-200', anim: '', icon: '⏳' };
         };
 
         window.renderActiveOrderBanner = () => {
             const banner = document.getElementById('active-order-banner');
-            const activeOrder = appState.myOrders.find(o => !o.status.includes('تم التوصيل') && !o.status.includes('مرفوض'));
+            const activeOrder = appState.myOrders.find(o => !o.status.includes('تم توصيل الطلب بنجاح') && !o.status.includes('تم التوصيل') && !o.status.includes('مرفوض'));
             
             if (activeOrder) {
                 const s = getStatusData(activeOrder.status);
