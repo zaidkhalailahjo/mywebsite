@@ -3,31 +3,84 @@
 <head>
   <meta charset="UTF-8">
   <title>تم نقل الموقع</title>
+
+  <!-- خط جميل -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- تحويل تلقائي بعد 5 ثواني -->
+  <meta http-equiv="refresh" content="5;url=https://www.farah-snacks.store/">
+
   <style>
     body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding-top: 100px;
+      margin: 0;
+      font-family: 'Cairo', sans-serif;
       direction: rtl;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ff7e5f, #feb47b);
+      color: #fff;
     }
-    a {
-      font-size: 20px;
-      color: blue;
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      max-width: 400px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    p {
+      font-size: 18px;
+      margin-bottom: 25px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 25px;
+      font-size: 18px;
+      color: #ff7e5f;
+      background: #fff;
+      border-radius: 30px;
       text-decoration: none;
+      transition: 0.3s;
+      font-weight: bold;
     }
-    a:hover {
-      text-decoration: underline;
+
+    .btn:hover {
+      background: #ffe3d6;
+      transform: scale(1.05);
+    }
+
+    .note {
+      margin-top: 15px;
+      font-size: 14px;
+      opacity: 0.8;
     }
   </style>
 </head>
 <body>
 
-  <h2>مرحبًا بك</h2>
-  <p>لقد انتقل الموقع إلى:</p>
+  <div class="container">
+    <h1>👋 مرحبًا بك</h1>
+    <p>لقد انتقل موقعنا إلى العنوان الجديد</p>
 
-  <a href="https://www.farah-snacks.store/">
-    https://www.farah-snacks.store/
-  </a>
+    <a class="btn" href="https://www.farah-snacks.store/">
+      الانتقال إلى الموقع الجديد 🚀
+    </a>
+
+    <div class="note">
+      سيتم تحويلك تلقائيًا خلال 5 ثوانٍ...
+    </div>
+  </div>
 
 </body>
 </html>
