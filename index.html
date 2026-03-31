@@ -47,7 +47,8 @@
 </head>
 <body class="bg-gray-50 flex flex-col min-h-screen text-gray-800">
 
-    <div id="toast-container" class="fixed top-5 right-5 z-[9999] flex flex-col gap-2 pointer-events-none"></div>
+    <!-- تم التعديل لتكون الإشعارات فوق كل الطبقات بوضوح -->
+    <div id="toast-container" class="fixed top-5 right-5 z-[99999] flex flex-col gap-2 pointer-events-none"></div>
 
     <!-- Header -->
     <header class="bg-[#002d74] text-white shadow-lg sticky top-0 z-40">
@@ -129,11 +130,12 @@
     <!-- Modals -->
 
     <!-- Auth Modal (Google Login) -->
-    <div id="auth-modal" class="modal fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div id="auth-modal" class="modal fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm">
         <div class="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl relative p-6 text-center">
-            <button class="close-modal absolute top-4 left-4 bg-gray-100 p-2 rounded-full hover:bg-gray-200 z-10"><i data-lucide="x" class="w-5 h-5"></i></button>
-            <h2 class="text-2xl font-extrabold text-[#002d74] mb-2">تسجيل الدخول</h2>
-            <p class="text-gray-500 text-sm mb-6" id="auth-subtitle">قم بتسجيل الدخول بحساب جوجل الخاص بك</p>
+            <!-- تمت إزالة زر الإغلاق ليكون التسجيل إجبارياً -->
+            <button id="auth-close-btn" class="close-modal hidden absolute top-4 left-4 bg-gray-100 p-2 rounded-full hover:bg-gray-200 z-10"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <h2 class="text-2xl font-extrabold text-[#002d74] mb-2">مرحباً بك!</h2>
+            <p class="text-gray-500 text-sm mb-6" id="auth-subtitle">يجب تسجيل الدخول لتتمكن من تصفح المنتجات والطلب.</p>
             
             <div id="auth-step-1" class="space-y-4">
                 <button onclick="window.googleLogin()" class="w-full bg-white border border-gray-300 text-gray-700 py-3.5 rounded-xl font-bold text-lg shadow-sm hover:bg-gray-50 transition-all flex justify-center items-center gap-3">
@@ -255,7 +257,7 @@
             <h2 class="text-2xl font-extrabold text-[#002d74] mb-2">أهلاً بك في فرح سناكس!</h2>
             <p class="text-gray-500 mb-6 text-sm">الرجاء اختيار موقعك لنتمكن من عرض القائمة المتاحة للتوصيل.</p>
             <div class="space-y-3">
-                <button onclick="window.setLocation('البوليفارد')" class="w-full bg-[#00839b] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#002d74] transition-colors shadow-md flex items-center justify-center gap-3">
+                <button id="loc-blvd-btn" onclick="window.setLocation('البوليفارد')" class="hidden w-full bg-[#00839b] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#002d74] transition-colors shadow-md flex items-center justify-center gap-3">
                     <i data-lucide="map-pin" class="w-5 h-5"></i> البوليفارد
                 </button>
                 <button onclick="window.setLocation('ضاحية الاستقلال')" class="w-full bg-[#00839b] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#002d74] transition-colors shadow-md flex items-center justify-center gap-3">
@@ -389,10 +391,10 @@
 
         // === TELEGRAM BOT CONFIGURATION ===
         const TELEGRAM_TOKEN = '8763721643:AAFySvK6lMwmaPbf4w6es76sdNq_T_aG9xw';
-        const TELEGRAM_CHAT_ID = '7065245608'; // ضع الـ ID هنا
+        const TELEGRAM_CHAT_ID = '7065245608'; 
 
         const sendTelegramNotification = async (title) => {
-            if(TELEGRAM_CHAT_ID === '7065245608') return;
+            if(TELEGRAM_CHAT_ID === 'ضع_رقمك_هنا') return;
             const text = `🔔 <b>${title}</b>\n\nالرابط:\nhttps://admin.farah-snacks.store/`;
             const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
             try {
@@ -435,6 +437,8 @@
             { id: 'osaka_3', name: 'Vanilla Latte', price: 2.50, category: 'المطاعم', restaurant: 'انكل اوساكا', hideFromMenu: true, image: 'https://uncleosaka.com/wp-content/uploads/2024/02/testing2.jpg' },
             { id: 'osaka_4', name: 'hazelnut latte', price: 2.50, category: 'المطاعم', restaurant: 'انكل اوساكا', hideFromMenu: true, image: 'https://uncleosaka.com/wp-content/uploads/2024/02/testing2.jpg' },
             { id: 'osaka_5', name: 'Pistachio Latte', price: 2.95, category: 'المطاعم', restaurant: 'انكل اوساكا', hideFromMenu: true, image: 'https://uncleosaka.com/wp-content/uploads/2024/02/testing2.jpg' },
+            
+            // سناكات
             { id: '30', name: 'شوكلاته فيوري', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/44hm8gjgg/Xrv1gtMvDtRtqoQfh00kvW4blvOZvPPZeOpnPb3G-removebg-preview.png' },
             { id: '28', name: 'شنينه', price: 0.50, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/44hm8gjgg/MDLNy6yzNPVuJTPuKCbOyJe6cLZQVaNd8TxHZmci-removebg-preview.png' },
             { id: 'shanina_1', name: 'شنينه 0.50', price: 0.50, category: 'المطاعم', restaurant: 'سناكات', hideFromMenu: true, image: 'https://uploads.onecompiler.io/43n8uttmw/44hm8gjgg/MDLNy6yzNPVuJTPuKCbOyJe6cLZQVaNd8TxHZmci-removebg-preview.png' },
@@ -447,15 +451,22 @@
             { id: '18', name: 'بسكوت مانيكس', price: 0.05, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445tfdw7r/images__18_-removebg-preview.png' },
             { id: '17', name: 'قهوة العميد 2/1', price: 0.25, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445tfdw7r/Products_Images_online_store_1-removebg-preview.png' },
             { id: '16', name: 'شوكلاتة بريك تايم', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445tfdw7r/images__17_-removebg-preview.png' },
-            { id: '15', name: 'شوكلاتة بريك سوبا', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/445tdx6b2/IMG_6071-IDX-removebg-preview.png' },
-            { id: '7', name: 'شيبس بيوقلز جبنة الناشو', price: 0.30, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/445t3c2fr/IMG-7394_370x370-removebg-preview.png' },
-            { id: '12', name: 'شيبس روكي', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/445t3c2fr/06-18-2025_0139pm2dbfc7c21d37480d6397-removebg-preview.png' },
-            { id: '9', name: 'شيبس سناك ميكس', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/445t3c2fr/sd465465f4654dfs654-removebg-preview.png' },
-            { id: '11', name: 'شيبس كانتينا', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/445t3c2fr/JOR-6251040001050_800x.webp' },
-            { id: '13', name: 'شيبس بینج رينج', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/445t3c2fr/tBVYLZQLm7O4ul18hNZQw0M7OuQpYRmUTTSo1Ut1-removebg-preview.png' },
-            { id: '8', name: 'شيبس تريتوس', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/445t3c2fr/images__16_-removebg-preview.png' },
-            { id: '10', name: 'شيبس شبابيك', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/445t3c2fr/blackfridayoffers-2023-10-10T174155.525_800x-removebg-preview.png' },  
-            { id: '14', name: 'شيبس ريلاكس', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/445t3c2fr/images__15_-removebg-preview.png' }
+            { id: '15', name: 'شوكلاتة بريك سوبا', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445tdx6b2/IMG_6071-IDX-removebg-preview.png' },
+            
+            // تحديث صور الشيبس ومنتجات جديدة
+            { id: '7', name: 'شيبس بيوقلز جبنة الناشو', price: 0.30, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445t3c2fr/IMG-7394_370x370-removebg-preview.png' },
+            { id: '12', name: 'شيبس روكي', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445t3c2fr/06-18-2025_0139pm2dbfc7c21d37480d6397-removebg-preview.png' },
+            { id: '9', name: 'شيبس سناك ميكس', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445t3c2fr/sd465465f4654dfs654-removebg-preview.png' },
+            { id: '11', name: 'شيبس كانتينا', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445t3c2fr/JOR-6251040001050_800x.webp' },
+            { id: '13', name: 'شيبس بینج رينج', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445t3c2fr/tBVYLZQLm7O4ul18hNZQw0M7OuQpYRmUTTSo1Ut1-removebg-preview.png' },
+            { id: '8', name: 'شيبس تريتوس', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445t3c2fr/images__16_-removebg-preview.png' },
+            { id: '10', name: 'شيبس شبابيك', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445t3c2fr/blackfridayoffers-2023-10-10T174155.525_800x-removebg-preview.png' },  
+            { id: '14', name: 'شيبس ريلاكس', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/445t3c2fr/images__15_-removebg-preview.png' },
+            { id: '32', name: 'كيكة باندا', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/44hm8gjgg/dDO9Oaz1v5uKg37U5G6O6ZfoizHABoS9OMoGJhnc-removebg-preview.png' },
+            { id: '33', name: 'ميني بوند كيك', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/44hm8gjgg/mini-pound-cake-776x743-removebg-preview.png' },
+            { id: '34', name: 'ماتريكس كولا', price: 0.25, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/44hm8gjgg/mfRuL349OzXVbDtDBh9xkcQYGeKuidxXO2ETxAXm-removebg-preview.png' },
+            { id: '35', name: 'شيبس بوشار', price: 0.10, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/44hm8gjgg/IMG-7377_800x-removebg-preview.png' },
+            { id: '36', name: 'لبن زبادي بلدنا', price: 0.50, category: 'المطاعم', restaurant: 'سناكات', hideFromAll: true, image: 'https://uploads.onecompiler.io/43n8uttmw/44hm8gjgg/MDLNy6yzNPVuJTPuKCbOyJe6cLZQVaNd8TxHZmci-removebg-preview.png' }
         ];
 
         const COUPONS = { 'راشد50': { type: 'fixed', val: 0.50 } }; 
@@ -500,8 +511,12 @@
         const saveLocalCart = () => localStorage.setItem(LS_CART_KEY, JSON.stringify(appState.cart));
 
         const checkLocation = () => {
-            if (!appState.location) toggleModal('location', true);
-            else document.getElementById('current-location-display').textContent = appState.location;
+            if (!appState.location) {
+                // تعيين ضاحية الاستقلال تلقائياً بدون نافذة
+                window.setLocation('ضاحية الاستقلال');
+            } else {
+                document.getElementById('current-location-display').textContent = appState.location;
+            }
         };
 
         const listenToProfile = () => {
@@ -526,6 +541,7 @@
                     document.getElementById('auth-profile').classList.add('hidden');
                     document.getElementById('auth-step-3').classList.remove('hidden');
                     document.getElementById('auth-subtitle')?.classList.add('hidden');
+                    document.getElementById('auth-close-btn').classList.add('hidden'); // إجبار الإكمال
                     toggleModal('auth', true);
                 }
             }, (error) => console.log("Profile listen err"));
@@ -590,33 +606,42 @@
                 appState.auth = getAuth(app);
                 
                 onAuthStateChanged(appState.auth, async (user) => {
-                    if (user) {
-                        appState.user = user;
+                    appState.user = user;
+                    if (user && !user.isAnonymous) {
+                        appState.userId = user.uid;
+                        document.getElementById('auth-close-btn').classList.remove('hidden'); // إظهار زر الإغلاق
+                        
                         if (!appState.listenersInitialized) {
                             initDataListeners();
                             appState.listenersInitialized = true;
                         }
-                        if (!user.isAnonymous) {
-                            appState.userId = user.uid;
-                            listenToProfile(); listenToOrders(); listenToCart(); listenToFeedback();
-                        } else {
-                            appState.profile = null; appState.cart = {}; updateAuthUI(); updateCartUI();
-                        }
+                        listenToProfile(); listenToOrders(); listenToCart(); listenToFeedback();
                         appState.isAuthReady = true; checkLocation(); renderProducts(); 
                     } else {
-                        try { await signInAnonymously(appState.auth); } catch (err) {}
+                        // إجبار الدخول
+                        appState.profile = null; appState.cart = {}; updateAuthUI(); updateCartUI();
+                        
+                        document.getElementById('auth-step-1').classList.remove('hidden');
+                        document.getElementById('auth-profile').classList.add('hidden');
+                        document.getElementById('auth-step-3').classList.add('hidden');
+                        document.getElementById('auth-close-btn').classList.add('hidden'); // إخفاء زر الإغلاق لإجبار الدخول
+                        toggleModal('auth', true);
+
+                        appState.isAuthReady = true; checkLocation(); renderProducts(); 
                     }
                 });
             } catch (e) {
+                console.error("Firebase init err:", e);
                 appState.db = 'LOCAL'; appState.isAuthReady = true;
                 appState.cart = loadLocalCart();
                 updateCartUI(); checkLocation();
             }
         };
 
+        // 2. Auth Methods
         window.googleLogin = () => {
             const provider = new GoogleAuthProvider();
-            signInWithPopup(appState.auth, provider).then(() => showToast('تم تسجيل الدخول!', 'success')).catch(() => showToast('خطأ بالدخول', 'error'));
+            signInWithPopup(appState.auth, provider).then(() => showToast('تم تسجيل الدخول بنجاح!', 'success')).catch(() => showToast('خطأ بالدخول', 'error'));
         };
 
         window.saveUserProfile = async () => {
@@ -705,7 +730,6 @@
                     type: appState.currentFeedbackType, content: text, status: 'يتم حلها', createdAt: serverTimestamp()
                 });
                 
-                // TELEGRAM NOTIFICATION
                 sendTelegramNotification(appState.currentFeedbackType === 'complaint' ? 'شكوى جديدة من فرح سناكس!' : 'اقتراح جديد من فرح سناكس!');
 
                 showToast("تم الإرسال للإدارة بنجاح!", "success");
@@ -985,6 +1009,7 @@
             btn.innerHTML = original; btn.disabled = false;
         };
 
+        // UI Detail Mappers
         window.openZingerOptions = () => {
             document.getElementById('product-modal-body').innerHTML = `<div class="p-6 text-center"><img src="https://uploads.onecompiler.io/43n8uttmw/44hm8gjgg/%D8%B3%D8%A7%D9%86%D8%AF%D9%88%D8%AA%D8%B4_%D8%B2%D9%86%D8%AC%D8%B1-removebg-preview.png" class="h-40 mx-auto mb-4 object-contain"><h2 class="text-2xl font-bold text-[#002d74] mb-6">سندويشة شاورما</h2><div class="space-y-3" dir="rtl"><button onclick="window.addItem('zinger_sand');window.toggleModal('product',false)" class="w-full flex justify-between items-center py-4 px-5 bg-white border border-gray-200 rounded-2xl font-bold text-[#002d74] shadow-sm hover:border-[#00839b] hover:bg-[#f0f9fa] transition-all"><span>سندويشة زنجر</span><span class="text-gray-500">1.50 د.أ</span></button><button onclick="window.addItem('zinger_meal');window.toggleModal('product',false)" class="w-full flex justify-between items-center py-4 px-5 bg-white border border-gray-200 rounded-2xl font-bold text-[#002d74] shadow-sm hover:border-[#00839b] hover:bg-[#f0f9fa] transition-all"><span>وجبة زنجر</span><span class="text-gray-500">2.50 د.أ</span></button></div></div>`;
             toggleModal('product', true);
