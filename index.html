@@ -2444,7 +2444,22 @@
         let globalVisits = [];
         let globalAttendance = [];
         let globalLeaves = []; 
-        let globalExpenses = []; 
+        let globalExpenses = [];
+        
+        const storage = getStorage(app);
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbypyU71N-WHj_MX553W7eabsVZjPH5g4diXod8YjjbcYAA27ioqKDJXbojZGGDL--Zw/exec";
+        const MAX_FILE_SIZE = 100 * 1024 * 1024; 
+        const MAX_GLOBAL_STORAGE = 5 * 1024 * 1024 * 1024 * 1024;
+        
+        let globalFiles = []; 
+        let globalFolders = [];
+        let currentFolderId = null;
+        let folderHistory = [{id: null, name: 'الرئيسية'}];
+        let activeUploads = [];
+        let isSelectMode = false;
+        let ctxMenuTarget = null;
+        let viewerFilesList = [];
+        let currentViewerIndex = -1;
 
         let currentGroupId = 'global'; 
         let initialTaskLoad = true; 
