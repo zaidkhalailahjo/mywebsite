@@ -354,6 +354,13 @@
         </div>
     </div>
 
+    <!-- القائمة السياقية (Right-Click Menu) للمستندات -->
+    <div id="driveContextMenu" class="hidden absolute bg-white dark:bg-gray-800 shadow-xl rounded-lg py-2 w-48 border border-gray-200 dark:border-gray-700 z-[100] text-sm font-bold">
+        <button id="ctxSelect" class="w-full text-right px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 flex items-center gap-2"><i class="fa-solid fa-check-square w-4 text-center"></i> تحديد</button>
+        <button id="ctxShare" class="w-full text-right px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-green-600 flex items-center gap-2"><i class="fa-solid fa-share-nodes w-4 text-center"></i> مشاركة</button>
+        <button id="ctxDelete" class="w-full text-right px-4 py-2 hover:bg-red-50 dark:hover:bg-red-900/30 text-red-600 flex items-center gap-2 border-t border-gray-100 dark:border-gray-700 mt-1 pt-2"><i class="fa-solid fa-trash w-4 text-center"></i> حذف</button>
+    </div>
+
     <div class="flex-1 flex flex-col h-screen overflow-hidden w-full relative">
         
         <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center z-10 flex-shrink-0 relative transition-colors">
