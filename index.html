@@ -4309,6 +4309,8 @@
         };
 
         window.showSection = (sectionId) => {
+            if(sectionId === 'leaves') window.renderLeaves();
+            if(sectionId === 'drive') window.renderDriveFiles();
             if(window.location.hash !== `#${sectionId}`) {
                 window.history.pushState(null, null, `#${sectionId}`);
             }
