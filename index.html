@@ -1751,6 +1751,280 @@
     </script>
 
     <script type="module">
+        // دوال إدارة العملاء (الجديدة)
+        let currentClientsTab = 'clients';
+        window.switchClientsTab = (tabName) => {
+            currentClientsTab = tabName;
+            const tabs = ['clients', 'signed', 'upcoming', 'last_visit'];
+            
+            tabs.forEach(t => {
+                const container = document.getElementById(`${t}Container`);
+                if(container) container.classList.add('hidden');
+                const btn = document.getElementById(`tabClients${t.charAt(0).toUpperCase() + t.slice(1)}`);
+                if(btn) {
+                    btn.classList.remove('tab-active');
+                    btn.classList.add('tab-inactive');
+                }
+            });
+            
+            const activeContainer = document.getElementById(`${tabName}Container`);
+            if(activeContainer) activeContainer.classList.remove('hidden');
+            
+            const activeBtn = document.getElementById(`tabClients${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`);
+            if(activeBtn) {
+                activeBtn.classList.remove('tab-inactive');
+                activeBtn.classList.add('tab-active');
+            }
+            
+            document.getElementById('addClientBtn').classList.toggle('hidden', tabName !== 'clients');
+            document.getElementById('addSignedClientBtn').classList.toggle('hidden', tabName !== 'signed');
+            document.getElementById('addVisitBtn').classList.toggle('hidden', tabName !== 'upcoming');
+            
+            window.renderClientsTab();
+        };
+
+        window.renderClientsTab = () => {
+            if(currentClientsTab === 'clients') renderClientsMgmtList();
+            else if(currentClientsTab === 'signed') renderSignedClientsList();
+            else renderVisitsList();
+        };
+
+        function renderClientsMgmtList() {
+            const cont = document.getElementById('clientsContainer');
+            if(!cont) return;
+            cont.innerHTML = '';
+            const query = document.getElementById('searchClientsMgmt')?.value.toLowerCase() || '';
+
+            const filtered = globalClientsMgmt.filter(c => c.name.toLowerCase().includes(query) || (c.phone && c.phone.includes(query)));
+
+            if(filtered.length === 0) {
+                cont.innerHTML = '<p class="col-span-full text-center text-gray-500 py-8">لا يوجد عملاء مسجلين.</p>';
+                return;
+            }
+
+            filtered.forEach(c => {
+                cont.innerHTML += `
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex flex-col">
+                        <div class="flex justify-between items-start mb-3 border-b dark:border-gray-700 pb-2">
+                            <h3 class="font-bold text-lg text-indigo-700 dark:text-indigo-400">${window.escapeHTML(c.name)}</h3>
+                        </div>
+                        <div class="text-xs text-gray-600 dark:text-gray-300 space-y-2 mb-4 flex-1">
+                            <p><i class="fa-solid fa-user text-gray-400 mx-1"></i> ${window.escapeHTML(c.contactPerson)}</p>
+                            <p><i class="fa-solid fa-phone text-gray-400 mx-1"></i> <span dir="ltr">${window.escapeHTML(c.phone)}</span></p>
+                            ${c.email ? `<p><i class="fa-solid fa-envelope text-gray-400 mx-1"></i> ${window.escapeHTML(c.email)}</p>` : ''}
+                            ${c.notes ? `<p class="text-[10px] text-gray-500 mt-2 p-2 bg-gray-50 dark:bg-gray-900 rounded">${window.escapeHTML(c.notes)}</p>` : ''}
+                        </div>
+                        <div class="pt-3 border-t dark:border-gray-700 flex gap-2 mt-auto">
+                            <button onclick="window.openAddClientModal('${c.id}')" class="flex-1 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-xs py-1.5 rounded font-bold transition">تعديل</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderSignedClientsList() {
+             const cont = document.getElementById('signedContainer');
+             if(!cont) return;
+             cont.innerHTML = '';
+             const query = document.getElementById('searchClientsMgmt')?.value.toLowerCase() || '';
+
+             const signedClients = globalClientsMgmt.filter(c => c.contracts && c.contracts.length > 0 && c.name.toLowerCase().includes(query));
+
+             if(signedClients.length === 0) {
+                 cont.innerHTML = '<p class="col-span-full text-center text-gray-500 py-8">لا يوجد عملاء موقعين.</p>';
+                 return;
+             }
+
+             signedClients.forEach(c => {
+                 let contractsHtml = '<div class="space-y-2 mt-2">';
+                 c.contracts.forEach((contract, index) => {
+                     contractsHtml += `
+                         <div class="bg-gray-50 dark:bg-gray-900 border dark:border-gray-600 p-2 rounded text-xs flex justify-between items-center shadow-sm">
+                             <div>
+                                 <p class="font-bold text-gray-700 dark:text-gray-200">عقد ${contract.date}</p>
+                             </div>
+                             <a href="${contract.file}" target="_blank" class="bg-teal-500 text-white px-2 py-1 rounded">عرض الملف</a>
+                         </div>
+                     `;
+                 });
+                 contractsHtml += '</div>';
+
+                 cont.innerHTML += `
+                     <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border-t-4 border-teal-500 flex flex-col h-full">
+                         <h3 class="font-bold text-lg text-teal-700 dark:text-teal-400 mb-2">${window.escapeHTML(c.name)}</h3>
+                         <div class="flex-1">${contractsHtml}</div>
+                     </div>
+                 `;
+             });
+        }
+
+        function renderVisitsList() {
+            const cont = document.getElementById(`${currentClientsTab}Container`);
+            if(!cont) return;
+            cont.innerHTML = '';
+            
+            const now = Date.now();
+            let visitsToShow = globalVisits.filter(v => {
+                if(currentClientsTab === 'upcoming') return v.dateTime >= now - (1000 * 60 * 60 * 24); 
+                else return v.dateTime < now - (1000 * 60 * 60 * 24); 
+            });
+
+            if(currentClientsTab === 'upcoming') visitsToShow.sort((a,b) => a.dateTime - b.dateTime);
+            else visitsToShow.sort((a,b) => b.dateTime - a.dateTime);
+
+            if(visitsToShow.length === 0) {
+                cont.innerHTML = `<p class="col-span-full text-center text-gray-500 py-8">لا يوجد زيارات لعرضها.</p>`;
+                return;
+            }
+
+            visitsToShow.forEach(v => {
+                const client = globalClientsMgmt.find(c => c.id === v.clientId);
+                if(!client) return; 
+                
+                const dObj = new Date(v.dateTime);
+                const dateStr = dObj.toLocaleDateString('ar-EG');
+                const timeStr = dObj.toLocaleTimeString('ar-EG', {hour:'2-digit', minute:'2-digit'});
+
+                let actionBtns = '';
+                if(currentClientsTab === 'upcoming') {
+                    actionBtns = `
+                        <div class="flex gap-2 w-full mt-3 pt-3 border-t dark:border-gray-700">
+                            <button onclick="window.openVisitModal('${v.id}')" class="flex-1 bg-orange-50 text-orange-600 py-1.5 rounded text-xs font-bold border border-orange-200">تعديل</button>
+                            <button onclick="window.deleteVisit('${v.id}')" class="bg-red-50 text-red-600 px-3 py-1.5 rounded text-xs font-bold border border-red-200">حذف</button>
+                        </div>
+                    `;
+                }
+
+                cont.innerHTML += `
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border-t-4 ${currentClientsTab === 'upcoming' ? 'border-orange-500' : 'border-gray-400'} flex flex-col">
+                        <h3 class="font-bold text-base text-gray-800 dark:text-white mb-2">${window.escapeHTML(client.name)}</h3>
+                        <div class="text-xs text-gray-600 dark:text-gray-300 space-y-2 flex-1 bg-gray-50 dark:bg-gray-900/50 p-2 rounded-lg">
+                            <p>التاريخ: ${dateStr}</p>
+                            <p>الوقت: <span dir="ltr">${timeStr}</span></p>
+                            ${v.notes ? `<p class="mt-2 pt-2 border-t dark:border-gray-700">${window.escapeHTML(v.notes)}</p>` : ''}
+                        </div>
+                        ${actionBtns}
+                    </div>
+                `;
+            });
+        }
+
+        window.openAddClientModal = (id = null) => {
+            document.getElementById('clientMgmtForm').reset();
+            document.getElementById('clientMgmtId').value = id || '';
+            document.getElementById('clientMgmtModalTitle').innerText = id ? 'تعديل العميل' : 'إضافة عميل جديد';
+            
+            if (id) {
+                const client = globalClientsMgmt.find(c => c.id === id);
+                if (client) {
+                    document.getElementById('clientMgmtName').value = client.name || '';
+                    document.getElementById('clientMgmtContact').value = client.contactPerson || '';
+                    document.getElementById('clientMgmtPhone').value = client.phone || '';
+                    document.getElementById('clientMgmtEmail').value = client.email || '';
+                    document.getElementById('clientMgmtNotes').value = client.notes || '';
+                }
+            }
+            window.openModal('addClientModal');
+        };
+
+        document.getElementById('clientMgmtForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if(!currentUserData) return;
+            const id = document.getElementById('clientMgmtId').value;
+            const data = {
+                name: document.getElementById('clientMgmtName').value.trim(),
+                contactPerson: document.getElementById('clientMgmtContact').value.trim(),
+                phone: document.getElementById('clientMgmtPhone').value,
+                email: document.getElementById('clientMgmtEmail').value,
+                notes: document.getElementById('clientMgmtNotes').value,
+                addedBy: currentUserData.name,
+                timestamp: Date.now()
+            };
+
+            try {
+                if(id) {
+                    await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'robot_clients_mgmt', id), data);
+                    showToast('تم التعديل', 'success');
+                } else {
+                    await addDoc(getColRef('robot_clients_mgmt'), data);
+                    showToast('تمت الإضافة', 'success');
+                }
+                window.closeModal('addClientModal');
+            } catch(e) { console.error(e); }
+        });
+
+        window.openSignedClientModal = () => {
+            document.getElementById('signedClientForm').reset();
+            const select = document.getElementById('signedClientSelect');
+            select.innerHTML = '<option value="">اختر العميل</option>';
+            globalClientsMgmt.forEach(c => {
+                select.innerHTML += `<option value="${c.id}">${window.escapeHTML(c.name)}</option>`;
+            });
+            window.openModal('signedClientModal');
+        };
+
+        document.getElementById('signedContractFileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                document.getElementById('signedContractFileBase64').value = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById('signedClientForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const clientId = document.getElementById('signedClientSelect').value;
+            const date = document.getElementById('signedContractDate').value;
+            const fileBase64 = document.getElementById('signedContractFileBase64').value;
+            
+            const client = globalClientsMgmt.find(c => c.id === clientId);
+            if(!client || !fileBase64) return;
+
+            const currentContracts = client.contracts || [];
+            currentContracts.push({ date: date, file: fileBase64, timestamp: Date.now() });
+
+            await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'robot_clients_mgmt', clientId), { contracts: currentContracts });
+            window.closeModal('signedClientModal');
+            showToast('تم إضافة العقد', 'success');
+        });
+
+        window.openVisitModal = (id = null) => {
+            document.getElementById('visitForm').reset();
+            document.getElementById('visitId').value = id || '';
+            const select = document.getElementById('visitClientSelect');
+            select.innerHTML = '<option value="">اختر العميل</option>';
+            globalClientsMgmt.forEach(c => {
+                select.innerHTML += `<option value="${c.id}">${window.escapeHTML(c.name)}</option>`;
+            });
+            window.openModal('visitModal');
+        };
+
+        document.getElementById('visitForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('visitId').value;
+            const data = {
+                clientId: document.getElementById('visitClientSelect').value,
+                dateTime: new Date(document.getElementById('visitDateTime').value).getTime(),
+                notes: document.getElementById('visitNotes').value,
+                timestamp: Date.now()
+            };
+
+            try {
+                if(id) await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'visits_mgmt', id), data);
+                else await addDoc(getColRef('visits_mgmt'), data);
+                window.closeModal('visitModal');
+                showToast('تم حفظ الزيارة', 'success');
+            } catch(e) { console.error(e); }
+        });
+
+        window.deleteVisit = async (id) => {
+            if(confirm('متأكد من الحذف؟')) {
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'visits_mgmt', id));
+                showToast('تم الحذف', 'success');
+            }
+        };
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, getDoc, setDoc, query, orderBy, limit, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
