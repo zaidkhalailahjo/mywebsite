@@ -1970,6 +1970,8 @@
         let globalGroups = [{ id: 'global', name: 'الدردشة العامة للشركة', members: [], desc: 'يتواجد هنا جميع أعضاء مساحة العمل' }]; 
         let globalNotices = JSON.parse(localStorage.getItem('quill_notices') || '[]');
         let globalCRM = JSON.parse(localStorage.getItem('quill_crm') || '[]');
+        let globalClientsMgmt = []; // متغيرات إدارة العملاء الجديدة
+        let globalVisits = [];
         let globalAttendance = [];
         let globalLeaves = []; 
         let globalExpenses = []; 
