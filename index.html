@@ -5644,6 +5644,19 @@
                 renderCRM();
             }, (error) => { console.error(error); });
 
+            onSnapshot(getColRef('robot_clients_mgmt'), (snapshot) => {
+                globalClientsMgmt = [];
+                snapshot.forEach(doc => globalClientsMgmt.push({id: doc.id, ...doc.data()}));
+                globalClientsMgmt.sort((a,b) => b.timestamp - a.timestamp);
+                if(window.location.hash === '#clients_mgmt') window.renderClientsTab();
+            }, (error) => console.error(error));
+
+            onSnapshot(getColRef('visits_mgmt'), (snapshot) => {
+                globalVisits = [];
+                snapshot.forEach(doc => globalVisits.push({id: doc.id, ...doc.data()}));
+                if(window.location.hash === '#clients_mgmt') window.renderClientsTab();
+            }, (error) => console.error(error));
+
             onSnapshot(getColRef('tasks'), (snapshot) => {
                 globalTasks = [];
                 let hasNewAssignedTask = false;
