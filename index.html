@@ -344,64 +344,166 @@
         </div>
     </div>
 
-    <!-- نافذة عارض الوسائط -->
-    <div id="mediaViewerModal" class="fixed inset-0 bg-black/90 hidden flex items-center justify-center z-[100] p-4 transition-opacity">
-        <button onclick="window.closeMediaModal()" class="absolute top-4 right-4 text-white hover:text-gray-300 p-2 z-[101]">
-            <i class="fa-solid fa-xmark text-3xl"></i>
-        </button>
-        <div id="mediaViewerContent" class="max-w-full max-h-full flex items-center justify-center">
-            <!-- المحتوى يتم حقنه هنا -->
+    <!-- النوافذ الخاصة بالمستندات (Drive) -->
+    <!-- إنشاء مجلد -->
+    <div id="createFolderModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full max-w-sm overflow-hidden">
+            <div class="bg-indigo-600 text-white p-4 flex justify-between items-center">
+                <h3 class="font-bold text-base">إنشاء مجلد جديد</h3>
+                <button onclick="window.closeModal('createFolderModal')" class="hover:text-indigo-200"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <form id="createFolderForm" class="p-4 md:p-6 space-y-4" onsubmit="window.handleCreateFolder(event)">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">اسم المجلد</label>
+                    <input type="text" id="newFolderName" required class="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:border-indigo-500 outline-none">
+                </div>
+                <div class="pt-2 flex justify-end gap-2">
+                    <button type="button" onclick="window.closeModal('createFolderModal')" class="px-4 py-2 border dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 font-bold text-sm">إلغاء</button>
+                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-bold text-sm shadow">إنشاء</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- القائمة السياقية (Right-Click Menu) للمستندات -->
-    <div id="driveContextMenu" class="hidden absolute bg-white dark:bg-gray-800 shadow-xl rounded-lg py-2 w-48 border border-gray-200 dark:border-gray-700 z-[100] text-sm font-bold">
-        <button id="ctxSelect" class="w-full text-right px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 flex items-center gap-2"><i class="fa-solid fa-check-square w-4 text-center"></i> تحديد</button>
-        <button id="ctxShare" class="w-full text-right px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-green-600 flex items-center gap-2"><i class="fa-solid fa-share-nodes w-4 text-center"></i> مشاركة</button>
-        <button id="ctxDelete" class="w-full text-right px-4 py-2 hover:bg-red-50 dark:hover:bg-red-900/30 text-red-600 flex items-center gap-2 border-t border-gray-100 dark:border-gray-700 mt-1 pt-2"><i class="fa-solid fa-trash w-4 text-center"></i> حذف</button>
+    <!-- إعادة تسمية -->
+    <div id="renameModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-[60] p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full max-w-sm overflow-hidden">
+            <div class="bg-indigo-600 text-white p-4 flex justify-between items-center">
+                <h3 class="font-bold text-base" id="renameModalTitle">إعادة التسمية</h3>
+                <button onclick="window.closeModal('renameModal')" class="hover:text-indigo-200"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <form id="renameForm" class="p-4 md:p-6 space-y-4" onsubmit="window.handleRenameSubmit(event)">
+                <input type="hidden" id="renameItemId">
+                <input type="hidden" id="renameItemType">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">الاسم الجديد</label>
+                    <input type="text" id="renameItemName" required class="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:border-indigo-500 outline-none">
+                </div>
+                <div class="pt-2 flex justify-end gap-2">
+                    <button type="button" onclick="window.closeModal('renameModal')" class="px-4 py-2 border dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 font-bold text-sm">إلغاء</button>
+                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-bold text-sm shadow">حفظ</button>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <div class="flex-1 flex flex-col h-screen overflow-hidden w-full relative">
-        
-        <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center z-10 flex-shrink-0 relative transition-colors">
-            <div class="flex items-center space-x-2 md:space-x-4 space-x-reverse z-10">
-                <button onclick="window.toggleSidebar()" class="md:hidden text-gray-500 hover:text-primary ml-2">
-                    <i class="fa-solid fa-bars text-xl"></i>
-                </button>
-                <div class="flex items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 p-1 rounded transition" onclick="window.location.hash='settings'">
-                    <img id="userAvatar" src="https://ui-avatars.com/api/?name=مستخدم&background=00839b&color=fff" class="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-secondary object-cover">
-                    <div class="mr-2 md:mr-3 hidden sm:block text-right">
-                        <p id="userName" class="text-xs md:text-sm font-semibold text-gray-800 dark:text-white">جاري التحميل...</p>
-                        <p id="userRole" class="text-[10px] md:text-xs text-secondary font-bold"></p>
+    <!-- المشاركة -->
+    <div id="shareModalFallback" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-[65] p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full max-w-md overflow-hidden flex flex-col">
+            <div class="bg-green-600 text-white p-4 flex justify-between items-center flex-shrink-0">
+                <h3 class="font-bold text-base md:text-lg">مشاركة الملفات المحددة</h3>
+                <button onclick="window.closeModal('shareModalFallback')" class="hover:text-green-200"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="p-4 md:p-6 flex flex-col items-center gap-6">
+                <textarea id="shareTextContent" class="hidden"></textarea>
+                <div class="w-full border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-gray-50 dark:bg-gray-900/50 space-y-3">
+                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">المشاركة عبر واتساب</label>
+                    <input type="text" id="sharePhoneInput" placeholder="رقم الهاتف (مثلاً: 96279...)" class="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:border-green-500 outline-none text-sm text-right" dir="ltr">
+                    <button onclick="window.shareViaWhatsApp()" class="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-2.5 rounded-lg font-bold flex items-center justify-center gap-3 transition">
+                        <i class="fa-brands fa-whatsapp text-xl"></i> إرسال عبر WhatsApp
+                    </button>
+                </div>
+                <div class="w-full border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-gray-50 dark:bg-gray-900/50 space-y-3">
+                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">المشاركة عبر الإيميل</label>
+                    <input type="email" id="shareEmailInput" placeholder="البريد الإلكتروني للجهة المستلمة" class="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:border-blue-500 outline-none text-sm text-right" dir="ltr">
+                    <button onclick="window.shareViaOutlook()" class="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2.5 rounded-lg font-bold flex items-center justify-center gap-3 transition">
+                        <i class="fa-regular fa-envelope text-xl"></i> إرسال عبر الإيميل
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- عارض الصور للمستندات -->
+    <div id="imageViewerModal" class="fixed inset-0 bg-black/95 hidden flex flex-col items-center justify-center z-[70] p-4 select-none touch-none">
+        <button onclick="window.closeImageViewer()" class="absolute top-4 right-4 text-white hover:text-gray-300 text-3xl z-10"><i class="fa-solid fa-xmark"></i></button>
+        <h3 id="imageViewerTitle" class="absolute top-4 w-full text-center text-white font-bold text-lg pointer-events-none drop-shadow-md z-0"></h3>
+        <button id="viewerRightBtn" onclick="window.navigateViewer(1)" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 text-4xl p-2 z-10"><i class="fa-solid fa-chevron-right"></i></button>
+        <button id="viewerLeftBtn" onclick="window.navigateViewer(-1)" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 text-4xl p-2 z-10"><i class="fa-solid fa-chevron-left"></i></button>
+
+        <div class="w-full max-w-5xl h-[70vh] flex items-center justify-center relative pointer-events-auto">
+            <img id="imageViewerImg" src="" class="max-w-full max-h-full object-contain rounded shadow-2xl transition-opacity">
+            <iframe id="imageViewerVideo" class="w-full h-[60vh] rounded shadow-2xl hidden" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="absolute bottom-6 flex gap-4 z-10">
+            <a id="imageViewerDownloadBtn" href="#" download class="bg-secondary hover:bg-primary text-white px-6 py-2 rounded-lg font-bold transition flex items-center gap-2 shadow-lg">
+                <i class="fa-solid fa-download"></i> تحميل
+            </a>
+        </div>
+    </div>
+
+    <!-- النوافذ الخاصة بالإجازات والمغادرات -->
+    <!-- تقديم طلب -->
+    <div id="leaveModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="bg-pink-600 text-white p-4 flex justify-between items-center flex-shrink-0">
+                <h3 class="font-bold text-base md:text-lg">تقديم طلب إجازة / مغادرة</h3>
+                <button onclick="window.closeModal('leaveModal')" class="hover:text-pink-200"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="p-4 md:p-6 overflow-y-auto flex-1">
+                <form id="leaveForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">نوع الطلب</label>
+                        <select id="leaveType" onchange="window.handleLeaveTypeChange()" required class="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:border-pink-500 focus:outline-none font-bold">
+                            <option value="إجازة سنوية">إجازة سنوية (تخصم من رصيد الأيام)</option>
+                            <option value="إجازة مرضية">إجازة مرضية</option>
+                            <option value="مغادرة مبكرة">مغادرة مبكرة (تخصم من رصيد الساعات)</option>
+                        </select>
                     </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><label class="block text-sm text-gray-600 dark:text-gray-300 mb-1" id="lblLeaveFrom">من تاريخ</label><input type="date" id="leaveFrom" required class="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:border-pink-500 focus:outline-none"></div>
+                        <div><label class="block text-sm text-gray-600 dark:text-gray-300 mb-1" id="lblLeaveTo">إلى تاريخ</label><input type="date" id="leaveTo" required class="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:border-pink-500 focus:outline-none"></div>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-600 dark:text-gray-300 mb-1 font-bold">السبب / التفاصيل الكاملة</label>
+                        <textarea id="leaveReason" rows="2" class="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:border-pink-500 focus:outline-none whitespace-pre-wrap" required></textarea>
+                    </div>
+                    <div class="border border-gray-200 dark:border-gray-600 rounded-lg p-3 bg-gray-50 dark:bg-gray-700/50">
+                        <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1 font-bold">إضافة مرفق (عذر طبي أو إثبات)</label>
+                        <input type="file" id="leaveAttachmentInput" accept="image/*,application/pdf" class="w-full text-sm bg-white dark:bg-gray-800 border dark:border-gray-600 rounded px-2 py-1">
+                        <input type="hidden" id="leaveAttachmentBase64">
+                    </div>
+                    <div class="pt-4 flex justify-end space-x-2 space-x-reverse border-t dark:border-gray-700">
+                        <button type="button" onclick="window.closeModal('leaveModal')" class="px-4 py-2 border dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 font-bold">إلغاء</button>
+                        <button type="submit" id="leaveSubmitBtn" class="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 font-bold shadow">إرسال الطلب</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- تفاصيل الطلب للمدير -->
+    <div id="leaveDetailsModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-[60] p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="bg-pink-600 text-white p-4 flex justify-between items-center flex-shrink-0">
+                <h3 class="font-bold text-base md:text-lg">تفاصيل ومناقشة الطلب</h3>
+                <button onclick="window.closeModal('leaveDetailsModal')" class="hover:text-pink-200"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="p-4 md:p-6 overflow-y-auto flex-1">
+                <h4 class="font-bold text-gray-800 dark:text-white mb-2" id="leaveDetailsName"></h4>
+                <div class="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 p-3 rounded-lg mb-3">
+                    <p id="leaveDetailsText" class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed font-semibold"></p>
                 </div>
                 
-                <button id="installAppBtn" class="hidden text-gray-400 hover:text-secondary p-2 rounded transition font-bold" title="تثبيت التطبيق على الجهاز">
-                    <i class="fa-solid fa-download text-lg"></i>
-                </button>
+                <div id="leaveAttachmentSection" class="hidden mb-4 border border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-900/30 p-3 rounded-lg text-center">
+                    <p class="text-xs font-bold text-blue-800 dark:text-blue-300 mb-2">يوجد مرفق مع هذا الطلب</p>
+                    <a id="leaveAttachmentLink" href="#" target="_blank" class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded font-bold text-sm shadow-sm transition">
+                        <i class="fa-solid fa-eye"></i> عرض / تحميل المرفق
+                    </a>
+                </div>
 
-                <button onclick="window.toggleLanguage()" class="text-gray-400 hover:text-secondary p-2 rounded transition font-bold" title="تبديل اللغة">
-                    <span id="langIconTxt">EN</span>
-                </button>
-                
-                <button onclick="window.toggleTheme()" class="text-gray-400 hover:text-secondary p-2 rounded transition" title="الوضع الليلي/النهاري">
-                    <i id="themeToggleIcon" class="fa-solid fa-moon"></i>
-                </button>
-
-                <div class="relative">
-                    <button onclick="window.toggleNotificationsDropdown()" class="text-gray-400 hover:text-secondary p-2 rounded transition relative" title="الإشعارات">
-                        <i class="fa-solid fa-bell"></i>
-                        <span id="notificationsBadge" class="absolute top-1 right-1 bg-red-500 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center hidden pointer-events-none">0</span>
-                    </button>
-                    <div id="notificationsDropdown" class="hidden absolute top-full right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl rounded-xl w-72 max-h-80 overflow-hidden flex flex-col z-50">
-                        <div class="bg-gray-50 dark:bg-gray-900 p-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center flex-shrink-0">
-                            <span class="font-bold text-sm text-gray-700 dark:text-gray-200">الإشعارات</span>
-                            <button onclick="window.clearAllNotifications()" class="text-xs text-red-500 hover:underline font-bold py-1 px-2">حذف الكل</button>
-                        </div>
-                        <div id="notificationsList" class="overflow-y-auto flex-1 p-2 space-y-2"></div>
+                <div class="border-t border-gray-200 dark:border-gray-600 pt-4">
+                    <h5 class="font-bold text-sm text-gray-700 dark:text-gray-300 mb-2"><i class="fa-regular fa-comments mx-1"></i> محادثة الطلب</h5>
+                    <div id="leaveChatHistory" class="bg-gray-50 dark:bg-gray-900 rounded border dark:border-gray-700 p-2 h-40 overflow-y-auto mb-3 space-y-2 text-sm flex flex-col"></div>
+                    <div class="flex gap-2">
+                        <input type="hidden" id="currentLeaveIdForChat">
+                        <input type="text" id="leaveChatInput" class="flex-1 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:outline-none focus:border-pink-500 text-sm" placeholder="اكتب رداً...">
+                        <button onclick="window.sendLeaveComment()" class="bg-secondary hover:bg-primary text-white px-4 py-2 rounded-lg font-bold transition shadow-sm"><i class="fa-solid fa-paper-plane"></i></button>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
             
             <div class="absolute inset-x-0 top-0 h-full flex items-center justify-center pointer-events-none w-full z-0">
                 <button id="backToHomeBtn" onclick="window.location.hash='home-grid'" class="hidden pointer-events-auto text-white bg-secondary hover:bg-primary px-4 py-2 rounded-xl flex items-center gap-2 font-bold transition-colors text-sm shadow-md">
