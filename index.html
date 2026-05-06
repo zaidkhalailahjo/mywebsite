@@ -679,13 +679,12 @@
                 </div>
             </section>
 
-            <!-- الحضور والانصراف (الجديد) -->
+            <!-- الحضور والانصراف -->
             <section id="attendance" class="section-content hidden animate-fade-in p-4 md:p-0">
                 <div class="flex justify-between items-center mb-4 md:mb-6">
                     <p class="text-sm md:text-base text-gray-600 dark:text-gray-300 font-bold" data-i18n="سجل الحضور والانصراف">سجل الحضور والانصراف اليومي</p>
                 </div>
                 
-                <!-- عرض الموظف الخاص (تسجيل الدخول والخروج) -->
                 <div id="empAttendanceView" class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 text-center mb-6 relative overflow-hidden">
                     <div id="attendanceLockBanner" class="absolute top-0 left-0 right-0 bg-red-500 text-white text-xs font-bold py-1 hidden">يجب تسجيل الدخول لفتح باقي أقسام النظام</div>
                     <h3 class="text-lg font-bold text-primary dark:text-secondary mb-2 mt-2" id="currentDateStr"></h3>
@@ -707,7 +706,6 @@
                     </div>
                 </div>
 
-                <!-- لوحة تحكم المدير للحضور والانصراف -->
                 <div id="ceoAttendanceView" class="hidden mb-6">
                     <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 mb-4 flex flex-col md:flex-row justify-between items-center gap-4">
                         <div class="flex items-center gap-2 w-full md:w-auto">
@@ -751,62 +749,132 @@
                     </table>
                 </div>
             </section>
-                <div class="flex justify-between items-center mb-4 md:mb-6">
-                    <p class="text-sm md:text-base text-gray-600 dark:text-gray-300 font-bold" data-i18n="سجل الحضور والانصراف">سجل الحضور والانصراف اليومي وتحديد الموقع</p>
-                </div>
-                
-                <div id="empAttendanceView" class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 text-center mb-6 relative overflow-hidden">
-                    <div id="attendanceLockBanner" class="absolute top-0 left-0 right-0 bg-red-500 text-white text-xs font-bold py-1 hidden">يجب تسجيل الدخول لفتح باقي أقسام النظام</div>
-                    <h3 class="text-lg font-bold text-primary dark:text-secondary mb-2 mt-2" id="currentDateStr"></h3>
-                    <p class="text-gray-500 dark:text-gray-400 mb-6 text-sm" id="attendanceStatusMsg">لم تقم بتسجيل الدخول اليوم.</p>
-                    
-                    <div class="flex flex-wrap justify-center gap-4">
-                        <button onclick="window.punchIn()" id="punchInBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-xl shadow transition flex items-center gap-2">
-                            <i class="fa-solid fa-right-to-bracket"></i> تسجيل دخول
-                        </button>
-                        <button onclick="window.punchBreak()" id="punchBreakBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-xl shadow transition flex items-center gap-2 hidden">
-                            <i class="fa-solid fa-mug-hot"></i> خروج مؤقت
-                        </button>
-                        <button onclick="window.returnFromBreak()" id="returnBreakBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-xl shadow transition flex items-center gap-2 hidden">
-                            <i class="fa-solid fa-rotate-left"></i> عودة للعمل
-                        </button>
-                        <button onclick="window.punchOut()" id="punchOutBtn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-xl shadow transition flex items-center gap-2 hidden">
-                            <i class="fa-solid fa-person-walking-arrow-right"></i> تسجيل انصراف
+
+            <!-- الإجازات -->
+            <section id="leaves" class="section-content hidden animate-fade-in p-4 md:p-0">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 md:mb-6 gap-3">
+                    <p class="text-sm md:text-base text-gray-600 dark:text-gray-300 font-bold" data-i18n="طلبات الإجازات">طلبات الإجازات والمغادرات</p>
+                    <div class="flex gap-2 w-full md:w-auto">
+                        <div class="relative flex-1 md:flex-none">
+                            <i class="fa-solid fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            <input type="text" id="searchLeaves" oninput="window.renderLeaves()" placeholder="بحث في الطلبات..." class="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg pr-10 pl-3 py-2 text-sm focus:outline-none focus:border-pink-500">
+                        </div>
+                        <button id="reqLeaveBtn" onclick="window.openModal('leaveModal')" class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center text-sm font-bold shadow-sm">
+                            <i class="fa-solid fa-plus mx-2"></i> طلب
                         </button>
                     </div>
                 </div>
 
-                <div id="ceoAttendanceView" class="hidden">
-                    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6 flex flex-col md:flex-row gap-4 items-center justify-between">
-                        <div class="flex items-center gap-2 w-full md:w-auto">
-                            <label class="font-bold text-gray-700 dark:text-gray-300">الموظف:</label>
-                            <select id="attendanceEmpSelect" onchange="window.renderSelectedEmpAttendance()" class="flex-1 md:w-64 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-2 focus:outline-none focus:border-secondary">
-                                <option value="all">-- عرض جميع الموظفين --</option>
-                            </select>
-                        </div>
-                        <div class="relative w-full md:w-auto">
-                            <i class="fa-solid fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                            <input type="text" id="searchAttendance" oninput="window.renderSelectedEmpAttendance()" placeholder="بحث بالاسم أو التاريخ..." class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg pl-3 pr-10 py-2 text-sm w-full focus:outline-none focus:border-blue-500 shadow-sm">
-                        </div>
+                <!-- عرض أرصدة الموظف الحالي (للموظف العادي) -->
+                <div id="myLeaveBalances" class="hidden grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl border-t-4 border-indigo-500 shadow-sm text-center">
+                        <h4 class="font-bold text-gray-700 dark:text-gray-300 mb-1 text-sm"><i class="fa-solid fa-calendar-day text-indigo-500 mx-1"></i> رصيد الإجازات المتبقي</h4>
+                        <p class="text-2xl font-bold text-indigo-600 dark:text-indigo-400" id="balDaysTxt">-- <span class="text-sm font-normal">يوم</span></p>
                     </div>
-                    
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden overflow-x-auto">
-                        <table class="w-full text-right min-w-[700px]">
-                            <thead class="bg-gray-50 dark:bg-gray-700 border-b dark:border-gray-600">
-                                <tr>
-                                    <th class="p-3 font-semibold text-gray-600 dark:text-gray-200">الموظف</th>
-                                    <th class="p-3 font-semibold text-gray-600 dark:text-gray-200">التاريخ</th>
-                                    <th class="p-3 font-semibold text-gray-600 dark:text-gray-200">وقت وموقع الدخول</th>
-                                    <th class="p-3 font-semibold text-gray-600 dark:text-gray-200">فترات الخروج المؤقت</th>
-                                    <th class="p-3 font-semibold text-gray-600 dark:text-gray-200">وقت وموقع الانصراف</th>
-                                </tr>
-                            </thead>
-                            <tbody id="attendanceRecordsList" class="divide-y divide-gray-100 dark:divide-gray-700">
-                                <tr><td colspan="5" class="p-4 text-center text-gray-500">لا توجد سجلات لعرضها</td></tr>
-                            </tbody>
-                        </table>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl border-t-4 border-teal-500 shadow-sm text-center">
+                        <h4 class="font-bold text-gray-700 dark:text-gray-300 mb-1 text-sm"><i class="fa-solid fa-clock text-teal-500 mx-1"></i> رصيد المغادرات المتبقي</h4>
+                        <p class="text-2xl font-bold text-teal-600 dark:text-teal-400" id="balHoursTxt">-- <span class="text-sm font-normal">ساعة</span></p>
                     </div>
                 </div>
+
+                <!-- لوحة تحكم المدير لتعديل الأرصدة -->
+                <div id="ceoLeaveBalancesSection" class="hidden bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-pink-200 dark:border-pink-900/50 mb-6">
+                    <h3 class="font-bold text-pink-600 dark:text-pink-400 mb-3 border-b border-pink-100 dark:border-gray-700 pb-2"><i class="fa-solid fa-sliders mx-2"></i>عرض وتعديل أرصدة الموظفين (للمدير)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                        <div class="relative">
+                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">اختر الموظف:</label>
+                            <div class="relative">
+                                <i class="fa-solid fa-user absolute right-3 top-1/2 transform -translate-y-1/2 text-pink-500"></i>
+                                <select id="balanceEmpSelect" onchange="window.loadSelectedEmpBalance()" class="w-full bg-white border border-gray-300 shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg pr-10 pl-3 py-2 appearance-none focus:outline-none focus:border-pink-500 font-bold cursor-pointer">
+                                    <option value="">-- عرض الجميع --</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">الرصيد الكلي (أيام):</label>
+                            <input type="number" id="empTotalDays" class="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:outline-none focus:border-pink-500" dir="ltr" disabled>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">الرصيد الكلي (ساعات):</label>
+                            <input type="number" id="empTotalHours" class="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:outline-none focus:border-pink-500" dir="ltr" disabled>
+                        </div>
+                        <div class="flex justify-end h-full items-end pb-[2px]">
+                            <button onclick="window.saveEmpBalance()" id="saveBalanceBtn" class="bg-pink-600 hover:bg-pink-700 text-white px-6 py-2 rounded-lg font-bold transition shadow-sm w-full" disabled>حفظ الرصيد</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden overflow-x-auto">
+                    <table class="w-full text-right min-w-[700px]">
+                        <thead class="bg-gray-50 dark:bg-gray-700 border-b dark:border-gray-600">
+                            <tr>
+                                <th class="p-3 font-semibold text-gray-600 dark:text-gray-200">الموظف</th>
+                                <th class="p-3 font-semibold text-gray-600 dark:text-gray-200">النوع</th>
+                                <th class="p-3 font-semibold text-gray-600 dark:text-gray-200 text-center">التفاصيل / المرفق</th>
+                                <th class="p-3 font-semibold text-gray-600 dark:text-gray-200">من تاريخ</th>
+                                <th class="p-3 font-semibold text-gray-600 dark:text-gray-200">إلى تاريخ</th>
+                                <th class="p-3 font-semibold text-gray-600 dark:text-gray-200">الحالة</th>
+                                <th id="leaveActionHeader" class="p-3 font-semibold text-gray-600 dark:text-gray-200 hidden text-center">الإجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leavesList" class="divide-y divide-gray-100 dark:divide-gray-700">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- المستندات (Drive) -->
+            <section id="drive" class="section-content hidden animate-fade-in p-4 md:p-0">
+                <div class="mb-6 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                    <div class="flex justify-between text-sm mb-2 font-bold text-gray-700 dark:text-gray-300">
+                        <span data-i18n="المساحة المستخدمة">المساحة المستخدمة</span>
+                        <span id="storageText">0 MB / 5 TB</span>
+                    </div>
+                    <div class="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-3 border border-gray-200 dark:border-gray-600 overflow-hidden">
+                        <div id="storageBar" class="bg-green-500 h-full transition-all duration-500 w-0 bg-striped animate-stripes"></div>
+                    </div>
+                    <p id="storageWarning" class="text-xs text-red-500 mt-2 font-bold hidden"><i class="fa-solid fa-triangle-exclamation"></i> لا يمكن رفع ملفات جديدة، المساحة ممتلئة!</p>
+                </div>
+
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 md:mb-6 gap-3">
+                    <p class="text-sm md:text-base text-gray-600 dark:text-gray-300" data-i18n="مشاركة الملفات">إدارة المستندات (الحد الأقصى للملف: 100MB)</p>
+                    <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                        <button id="toggleSelectModeBtn" onclick="window.toggleSelectMode()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center text-sm font-bold shadow flex-1 md:flex-none justify-center">
+                            تحديد ملفات
+                        </button>
+                        <button id="selectAllDriveBtn" onclick="window.selectAllDriveFiles()" class="hidden bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg transition-colors items-center text-sm font-bold shadow flex-1 md:flex-none justify-center">
+                            تحديد الكل
+                        </button>
+                        <button id="bulkShareDriveBtn" onclick="window.shareSelectedItems()" class="hidden bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center text-sm font-bold shadow flex-1 md:flex-none justify-center">
+                            <i class="fa-solid fa-share-nodes mx-2"></i> مشاركة
+                        </button>
+                        <button id="bulkDeleteDriveBtn" onclick="window.deleteSelectedDriveItems()" class="hidden bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center text-sm font-bold shadow flex-1 md:flex-none justify-center">
+                            <i class="fa-solid fa-trash-can mx-2"></i> حذف
+                        </button>
+                        <div class="relative flex-1 md:flex-none w-full md:w-auto">
+                            <i class="fa-solid fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            <input type="text" id="searchDrive" oninput="window.renderDriveFiles()" placeholder="بحث في المجلد..." class="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg pr-10 pl-3 py-2 text-sm focus:outline-none focus:border-blue-500">
+                        </div>
+                        <button onclick="window.openModal('createFolderModal')" class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center text-sm font-bold shadow flex-1 md:flex-none justify-center">
+                            <i class="fa-solid fa-folder-plus mx-2"></i> مجلد
+                        </button>
+                        <input type="file" id="driveFileInput" class="hidden" multiple onchange="window.handleDriveFileSelect(event)">
+                        <button id="uploadFileBtn" onclick="document.getElementById('driveFileInput').click()" class="bg-secondary hover:bg-primary text-white px-4 py-2 rounded-lg transition-colors flex items-center text-sm font-bold shadow flex-1 md:flex-none justify-center">
+                            <i class="fa-solid fa-cloud-arrow-up mx-2"></i> ملفات
+                        </button>
+                    </div>
+                </div>
+
+                <div id="driveBreadcrumbs" class="flex flex-wrap items-center gap-2 mb-4 text-sm font-bold text-gray-600 dark:text-gray-300">
+                    <span class="cursor-pointer hover:text-secondary flex items-center gap-1" onclick="window.navigateToFolder(null)"><i class="fa-solid fa-house"></i> الرئيسية</span>
+                </div>
+                
+                <h3 id="pinnedFilesTitle" class="font-bold text-gray-800 dark:text-gray-200 mb-3 border-b dark:border-gray-700 pb-2"><i class="fa-solid fa-thumbtack text-primary dark:text-secondary mx-2"></i>الملفات المثبتة في هذا المسار</h3>
+                <div id="pinnedFilesContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8"></div>
+
+                <h3 class="font-bold text-gray-800 dark:text-gray-200 mb-3 border-b dark:border-gray-700 pb-2"><i class="fa-regular fa-folder-open text-secondary mx-2"></i>المحتويات</h3>
+                <div id="allFilesContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
             </section>
 
             <section id="dashboard" class="section-content animate-fade-in hidden p-4 md:p-0">
