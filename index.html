@@ -6062,6 +6062,32 @@
         }
 
         function startDatabaseListeners() {
+            // داخل دالة startDatabaseListeners
+            function getStorageColRef(colName) { return collection(db, 'artifacts', appId, 'public', 'data', colName); }
+
+            onSnapshot(getStorageColRef('folders'), (snapshot) => {
+                globalFolders = []; snapshot.forEach(d => globalFolders.push({ id: d.id, ...d.data() }));
+                if(!document.getElementById('drive').classList.contains('hidden')) window.renderDriveFiles();
+            }, (error) => console.error(error));
+
+            onSnapshot(getStorageColRef('files'), (snapshot) => {
+                globalFiles = []; snapshot.forEach(d => globalFiles.push({ id: d.id, ...d.data() }));
+                globalFiles.sort((a,b) => b.timestamp - a.timestamp); 
+                window.updateStorageProgress();
+                if(!document.getElementById('drive').classList.contains('hidden')) window.renderDriveFiles();
+            }, (error) => console.error(error));
+
+            onSnapshot(getColRef('leaves'), (snapshot) => {
+                globalLeaves = []; snapshot.forEach(d => globalLeaves.push({ id: d.id, ...d.data() }));
+                globalLeaves.sort((a,b) => b.timestamp - a.timestamp); 
+                if(!document.getElementById('leaves').classList.contains('hidden')) window.renderLeaves();
+                
+                if(!document.getElementById('leaveDetailsModal').classList.contains('hidden')) {
+                    const currentOpenId = document.getElementById('currentLeaveIdForChat').value;
+                    const updatedLeave = globalLeaves.find(l => l.id === currentOpenId);
+                    if(updatedLeave) window.renderLeaveComments(updatedLeave.comments || []);
+                }
+            }, (error) => console.error(error));
             onSnapshot(getColRef('users'), (snapshot) => {
                 globalUsers = [];
                 snapshot.forEach(docSnap => {
