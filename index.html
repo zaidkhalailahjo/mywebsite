@@ -146,6 +146,21 @@
         .dark .tab-active { color: #a3e635; }
         .tab-inactive { border-bottom: 2px solid transparent; color: #6b7280; font-weight: 600; }
         .dark .tab-inactive { color: #9ca3af; }
+
+        /* Animation for storage bar */
+        .bg-striped { background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.25) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.25) 50%, rgba(255, 255, 255, 0.25) 75%, transparent 75%, transparent); background-size: 1.5rem 1.5rem; }
+        .animate-stripes { animation: slideStripes 1.5s linear infinite; }
+        @keyframes slideStripes { from { background-position: 1.5rem 0; } to { background-position: 0 0; } }
+
+        /* Loading Dots Animation */
+        .loading-dots::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+        @keyframes dots { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } 100% { content: ''; } }
+
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 h-screen overflow-hidden flex relative transition-colors duration-300">
